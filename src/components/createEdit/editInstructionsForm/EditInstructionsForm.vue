@@ -8,8 +8,12 @@ import {
   IonItem,
   IonLabel,
   IonReorder,
+  IonInput,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
-import { inject } from "vue";
+import { computed, inject } from "vue";
 import {
   INJECTION_KEY,
   useEditInstructionService,
@@ -25,16 +29,40 @@ const props = defineProps<Props>();
 
 //SERVICE
 
-const { instructions, onItemReorder, onSaveClick, onCancelClick } = inject(
-  INJECTION_KEY,
-  useEditInstructionService,
-)(props.recipeId);
+const {
+  instructions,
+  newInstructionText,
+  onItemReorder,
+  onAddInstruction,
+  onSaveClick,
+  onCancelClick,
+} = inject(INJECTION_KEY, useEditInstructionService)(props.recipeId);
+
+const disableAddButton = computed(() => {
+  return newInstructionText.value.trim() === "";
+});
 </script>
 
 <template>
   <ion-card>
     <ion-card-content>
       <ion-list>
+        <ion-item>
+          <ion-grid class="ion-no-padding">
+            <ion-row class="ion-align-items-end">
+              <ion-col size="9">
+                <ion-input
+                  label="Instruction"
+                  label-placement="stacked"
+                  v-model="newInstructionText"
+                />
+              </ion-col>
+              <ion-col size="3" class="ion-text-right">
+                <ion-button @click="onAddInstruction" :disabled="disableAddButton">Add</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
         <ion-reorder-group
           :disabled="false"
           @ion-item-reorder="onItemReorder($event)"

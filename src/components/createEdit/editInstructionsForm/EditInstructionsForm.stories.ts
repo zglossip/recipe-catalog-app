@@ -11,11 +11,13 @@ import EditInstructionsForm from "./EditInstructionsForm.vue";
 
 const stubEditInstructionsService = (args: any) => {
   const instructions = ref(args.instructions);
+  const newInstructionText = ref("");
 
   provide(
     INJECTION_KEY,
     (): EditInstructionsService => ({
       instructions,
+      newInstructionText,
       onItemReorder: (evt: CustomEvent) => {
         const from = evt.detail.from;
         const to = evt.detail.to;
@@ -25,6 +27,16 @@ const stubEditInstructionsService = (args: any) => {
 
         action("items reordered")({ to, from });
         evt.detail.complete();
+      },
+      onAddInstruction: () => {
+        const text = newInstructionText.value.trim();
+        if (!text) {
+          return;
+        }
+
+        instructions.value.push(text);
+        action("instruction added")({ text });
+        newInstructionText.value = "";
       },
       onSaveClick: action("saved"),
       onCancelClick: action("cancelled"),

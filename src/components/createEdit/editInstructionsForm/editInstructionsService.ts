@@ -8,7 +8,9 @@ export const INJECTION_KEY = Symbol();
 
 export interface EditInstructionsService {
   instructions: Ref<string[]>;
+  newInstructionText: Ref<string>;
   onItemReorder: (evt: CustomEvent) => void;
+  onAddInstruction: () => void;
   onSaveClick: () => void;
   onCancelClick: () => void;
 }
@@ -17,6 +19,7 @@ export const useEditInstructionService = (
   id?: number,
 ): EditInstructionsService => {
   const instructions: Ref<string[]> = ref([]);
+  const newInstructionText = ref("");
   const router = useRouter();
 
   const refreshData = async (): Promise<void> => {
@@ -39,6 +42,16 @@ export const useEditInstructionService = (
     reorderIonicItems(evt, instructions.value);
   };
 
+  const onAddInstruction = () => {
+    const text = newInstructionText.value.trim();
+    if (!text) {
+      return;
+    }
+
+    instructions.value.push(text);
+    newInstructionText.value = "";
+  };
+
   const onSaveClick = () => {
     if (id === undefined) {
       router.go(-1);
@@ -55,5 +68,12 @@ export const useEditInstructionService = (
     router.go(-1);
   };
 
-  return { instructions, onItemReorder, onSaveClick, onCancelClick };
+  return {
+    instructions,
+    newInstructionText,
+    onItemReorder,
+    onAddInstruction,
+    onSaveClick,
+    onCancelClick,
+  };
 };
