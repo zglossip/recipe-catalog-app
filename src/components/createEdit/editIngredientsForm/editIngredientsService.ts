@@ -9,7 +9,11 @@ export const INJECTION_KEY = Symbol();
 
 export interface EditIngredientsService {
   ingredients: Ref<Ingredient[]>;
+  newIngredientName: Ref<string>;
+  newIngredientQuantity: Ref<number>;
+  newIngredientUom: Ref<string>;
   onItemReorder: (evt: CustomEvent) => void;
+  onAddIngredient: () => void;
   onSaveClick: () => void;
   onCancelClick: () => void;
 }
@@ -18,6 +22,9 @@ export const useEditIngredientService = (
   id?: number,
 ): EditIngredientsService => {
   const ingredients: Ref<Ingredient[]> = ref([]);
+  const newIngredientName = ref("");
+  const newIngredientQuantity = ref(1);
+  const newIngredientUom = ref("");
 
   const router = useRouter();
 
@@ -41,6 +48,30 @@ export const useEditIngredientService = (
     reorderIonicItems(evt, ingredients.value);
   };
 
+  const onAddIngredient = () => {
+    const name = newIngredientName.value.trim();
+    if (!name) {
+      return;
+    }
+
+    const uom = newIngredientUom.value.trim();
+    const parsedQuantity = Number(newIngredientQuantity.value);
+    const quantity =
+      Number.isFinite(parsedQuantity) && parsedQuantity > 0
+        ? parsedQuantity
+        : 1;
+
+    ingredients.value.push({
+      name,
+      quantity,
+      uom: uom ? uom : undefined,
+    });
+
+    newIngredientName.value = "";
+    newIngredientQuantity.value = 1;
+    newIngredientUom.value = "";
+  };
+
   const onSaveClick = () => {
     if (id === undefined) {
       router.go(-1);
@@ -58,5 +89,14 @@ export const useEditIngredientService = (
     router.go(-1);
   };
 
-  return { ingredients, onItemReorder, onSaveClick, onCancelClick };
+  return {
+    ingredients,
+    newIngredientName,
+    newIngredientQuantity,
+    newIngredientUom,
+    onItemReorder,
+    onAddIngredient,
+    onSaveClick,
+    onCancelClick,
+  };
 };

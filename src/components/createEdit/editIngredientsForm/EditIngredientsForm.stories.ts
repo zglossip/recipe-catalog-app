@@ -12,11 +12,17 @@ import { generateIngredient } from "@tests/data/defaults";
 
 const stubEditIngredientsFormService = (args: any) => {
   const ingredients = ref(args.ingredients);
+  const newIngredientName = ref("");
+  const newIngredientQuantity = ref(1);
+  const newIngredientUom = ref("");
 
   provide(
     INJECTION_KEY,
     (): EditIngredientsService => ({
       ingredients,
+      newIngredientName,
+      newIngredientQuantity,
+      newIngredientUom,
       onItemReorder: (evt: CustomEvent) => {
         const from = evt.detail.from;
         const to = evt.detail.to;
@@ -26,6 +32,29 @@ const stubEditIngredientsFormService = (args: any) => {
 
         action("items reordered")({ to, from });
         evt.detail.complete();
+      },
+      onAddIngredient: () => {
+        const name = newIngredientName.value.trim();
+        if (!name) {
+          return;
+        }
+
+        const uom = newIngredientUom.value.trim();
+        const parsedQuantity = Number(newIngredientQuantity.value);
+        const quantity =
+          Number.isFinite(parsedQuantity) && parsedQuantity > 0
+            ? parsedQuantity
+            : 1;
+        ingredients.value.push({
+          name,
+          quantity,
+          uom: uom ? uom : undefined,
+        });
+        action("ingredient added")({ name, quantity, uom: uom || undefined });
+
+        newIngredientName.value = "";
+        newIngredientQuantity.value = 1;
+        newIngredientUom.value = "";
       },
       onSaveClick: action("saved"),
       onCancelClick: action("cancelled"),
