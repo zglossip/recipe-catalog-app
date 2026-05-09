@@ -1,8 +1,8 @@
-# Food History (Mobile)
+# Recipe Catalog (Mobile)
 
 Version 0.1.0
 
-A mobile application for tracking cooking history, recipes, and sources.
+A mobile application for browsing recipes
 
 Currently a work in progress.
 

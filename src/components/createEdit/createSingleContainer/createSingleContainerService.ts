@@ -67,7 +67,7 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
     const ingredientList: IngredientList = {
       recipeId,
       ingredients: ingredientsString.value.split("\n").map((ingredientLine) => {
-        const partitionedLine = ingredientLine.split(",");
+        const partitionedLine = ingredientLine.split("|");
 
         switch (partitionedLine.length) {
           case 4:
