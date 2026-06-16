@@ -2,7 +2,7 @@
 import RecipeItem from "@/components/browse/recipeItem/RecipeItem.vue";
 import FilterMenu from "@/components/browse/filterMenu/FilterMenu.vue";
 import BasePage from "@/components/common/basePage/BasePage.vue";
-import BaseFabModal from "@/components/common/baseFabModal/BaseFabModal.vue";
+//import BaseFabModal from "@/components/common/baseFabModal/BaseFabModal.vue";
 import { useBrowseViewService } from "./browseViewService";
 import { addCircleOutline, filterCircleOutline, menu } from "ionicons/icons";
 import { usePageRefreshController } from "@/composables/usePageRefresher";
@@ -78,7 +78,8 @@ const goToQuickAddWithClose = (closeModal: () => void) => {
             />
           </template>
         </base-fab-modal>
-        <base-fab-modal>
+        <!-- TODO: Add some sort of menu here to replace the FAB-->
+        <!-- <base-fab-modal>
           <template #fab>
             <ion-icon :icon="addCircleOutline" />
           </template>
@@ -92,7 +93,7 @@ const goToQuickAddWithClose = (closeModal: () => void) => {
               </ion-item>
             </ion-list>
           </template>
-        </base-fab-modal>
+        </base-fab-modal> -->
       </ion-fab-list>
     </ion-fab>
   </BasePage>
