@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { inject, toRefs } from "vue";
 import { useRecipeService, injectionKey } from "@/services/recipeService";
-import { IonCardTitle, IonCardSubtitle } from "@ionic/vue";
 import ButtonCard from "@/components/common/buttonCard/ButtonCard.vue";
 import { Recipe } from "@/types/Recipe";
 import { useRecipeUploadedDate } from "@/composables/useDateFormat";

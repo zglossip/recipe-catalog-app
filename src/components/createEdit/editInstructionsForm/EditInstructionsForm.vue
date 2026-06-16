@@ -1,18 +1,4 @@
 <script lang="ts" setup>
-import {
-  IonCard,
-  IonCardContent,
-  IonButton,
-  IonList,
-  IonReorderGroup,
-  IonItem,
-  IonLabel,
-  IonReorder,
-  IonInput,
-  IonGrid,
-  IonRow,
-  IonCol,
-} from "@ionic/vue";
 import { computed, inject } from "vue";
 import {
   INJECTION_KEY,

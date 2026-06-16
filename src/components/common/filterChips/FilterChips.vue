@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { IonCard, IonCardContent } from "@ionic/vue";
 import FilterChipSet from "@/components/common/filterChips/FilterChipSet.vue";
 import { FilterChipData } from "@/types/FilterChipData";
 import { FilterType } from "@/types/FilterType";

@@ -5,18 +5,6 @@ import {
   INJECTION_KEY,
   useEditHeaderFormService,
 } from "./editHeaderFormService";
-import {
-  IonCard,
-  IonCardContent,
-  IonInput,
-  IonList,
-  IonItem,
-  IonSelect,
-  IonSelectOption,
-  IonButton,
-  IonIcon,
-} from "@ionic/vue";
-import { add } from "ionicons/icons";
 import FilterChips from "@/components/common/filterChips/FilterChips.vue";
 
 interface Props {
@@ -90,7 +78,7 @@ const {
             label="Property"
           />
           <ion-button slot="end" @click="addChip">
-            <ion-icon :icon="add" />
+            <ion-icon />
           </ion-button>
         </ion-item>
         <ion-item>
