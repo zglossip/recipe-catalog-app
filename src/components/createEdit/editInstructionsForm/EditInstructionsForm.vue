@@ -44,7 +44,11 @@ const disableAddButton = computed(() => {
                 />
               </ion-col>
               <ion-col size="3" class="ion-text-right">
-                <ion-button @click="onAddInstruction" :disabled="disableAddButton">Add</ion-button>
+                <ion-button
+                  @click="onAddInstruction"
+                  :disabled="disableAddButton"
+                  >Add</ion-button
+                >
               </ion-col>
             </ion-row>
           </ion-grid>

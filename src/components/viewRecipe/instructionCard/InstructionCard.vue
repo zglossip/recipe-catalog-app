@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { inject } from "vue";
-import { IonSpinner, IonItem, IonLabel, IonList } from "@ionic/vue";
 import ButtonCard from "@/components/common/buttonCard/ButtonCard.vue";
 import {
   injectionKey,

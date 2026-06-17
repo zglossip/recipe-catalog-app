@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import { computed, inject } from "vue";
 import {
   INJECTION_KEY,
@@ -64,7 +63,11 @@ const disableAddButton = computed(() => {
                 />
               </ion-col>
               <ion-col size="3" class="ion-text-right">
-                <ion-button @click="onAddIngredient" :disabled="disableAddButton">Add</ion-button>
+                <ion-button
+                  @click="onAddIngredient"
+                  :disabled="disableAddButton"
+                  >Add</ion-button
+                >
               </ion-col>
             </ion-row>
           </ion-grid>

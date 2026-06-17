@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IonChip, IonLabel, IonIcon, IonAvatar } from "@ionic/vue";
-import { closeCircle } from "ionicons/icons";
 import { inject } from "vue";
 import { INJECTION_KEY, useFilterChipSetService } from "./filterChipSetService";
 
@@ -29,6 +27,6 @@ const { onClose } = inject(INJECTION_KEY, useFilterChipSetService)(closeEmit);
       <img :src="iconUrl" :alt="iconAltText" />
     </ion-avatar>
     <ion-label>{{ element }}</ion-label>
-    <ion-icon :icon="closeCircle" @click="onClose(element)" />
+    <ion-icon @click="onClose(element)" />
   </ion-chip>
 </template>

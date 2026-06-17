@@ -1,12 +1,5 @@
 <script setup lang="ts">
 import {
-  IonCard,
-  IonCardHeader,
-  IonButton,
-  IonCardContent,
-  IonCardTitle,
-} from "@ionic/vue";
-import {
   useButtonCardService,
   INJECTION_KEY,
 } from "@/components/common/buttonCard/buttonCardService";

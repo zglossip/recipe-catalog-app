@@ -4,15 +4,6 @@ import {
   INJECTION_KEY,
   useCreateSingleContainerService,
 } from "./createSingleContainerService";
-import {
-  IonInput,
-  IonList,
-  IonItem,
-  IonCard,
-  IonCardContent,
-  IonButton,
-  IonTextarea,
-} from "@ionic/vue";
 
 const {
   name,

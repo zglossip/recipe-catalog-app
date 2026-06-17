@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from "@storybook/vue3";
 import ButtonCard from "./ButtonCard.vue";
-import { IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { provide } from "vue";
 import { INJECTION_KEY } from "./buttonCardService";
 import { action } from "@storybook/addon-actions";
