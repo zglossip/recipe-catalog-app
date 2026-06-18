@@ -53,7 +53,7 @@ const formattedUploaded = useRecipeUploadedDate(recipe);
           </ion-label>
         </ion-col>
         <ion-col size="auto" :class="$style.recipeItemArrow">
-          <ion-icon  size="large" />
+          <ion-icon size="large" />
         </ion-col>
       </ion-row>
     </ion-grid>

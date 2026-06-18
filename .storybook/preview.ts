@@ -1,7 +1,15 @@
 import { Preview, setup } from "@storybook/vue3";
 import PrimeVue from "primevue/config";
+import Aura from "@primeuix/themes/aura";
+import "../src/style/style.css";
 
-setup((app) => app.use(PrimeVue));
+setup((app) => {
+  app.use(PrimeVue, {
+    theme: {
+      preset: Aura,
+    },
+  });
+});
 
 const preview: Preview = {
   parameters: {
