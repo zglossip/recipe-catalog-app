@@ -7,7 +7,6 @@ import {
 import RecipeCard from "@/components/viewRecipe/recipeCard/RecipeCard.vue";
 import IngredientCard from "../ingredientCard/IngredientCard.vue";
 import InstructionCard from "../instructionCard/InstructionCard.vue";
-import { IonItem, IonLabel } from "@ionic/vue";
 
 // PROPS
 interface Props {

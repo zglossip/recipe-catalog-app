@@ -5,16 +5,6 @@ import {
   injectionKey,
   useFilterMenuService,
 } from "@/components/browse/filterMenu/filterMenuService";
-import {
-  IonList,
-  IonItem,
-  IonSelect,
-  IonSelectOption,
-  IonInput,
-  IonButton,
-  IonIcon,
-} from "@ionic/vue";
-import { add } from "ionicons/icons";
 import FilterChips from "@/components/common/filterChips/FilterChips.vue";
 
 //PROPS
@@ -96,7 +86,7 @@ const {
         @update:modelValue="setFilterText"
       />
       <ion-button slot="end" @click="addFilter">
-        <ion-icon :icon="add" />
+        <ion-icon />
       </ion-button>
     </ion-item>
     <ion-item>

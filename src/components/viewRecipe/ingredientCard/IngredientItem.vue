@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { IonItem, IonLabel } from "@ionic/vue";
 import { Ingredient } from "@/types/Ingredient";
 import { formatMeasurementText } from "@/services/util";
 

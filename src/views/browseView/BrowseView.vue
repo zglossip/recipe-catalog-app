@@ -4,17 +4,7 @@ import FilterMenu from "@/components/browse/filterMenu/FilterMenu.vue";
 import BasePage from "@/components/common/basePage/BasePage.vue";
 //import BaseFabModal from "@/components/common/baseFabModal/BaseFabModal.vue";
 import { useBrowseViewService } from "./browseViewService";
-import { addCircleOutline, filterCircleOutline, menu } from "ionicons/icons";
 import { usePageRefreshController } from "@/composables/usePageRefresher";
-import {
-  IonFab,
-  IonFabButton,
-  IonFabList,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-} from "@ionic/vue";
 import { Filters } from "@/components/browse/filterMenu/filterMenuService";
 
 const pageRefreshController = usePageRefreshController();
@@ -27,8 +17,8 @@ const {
   tags,
   applyFilters,
   displayError,
-  goToCreationWizard,
-  goToQuickAdd,
+  // goToCreationWizard,
+  // goToQuickAdd,
 } = useBrowseViewService(pageRefreshController);
 
 const onApply = (filters: Filters) => {
@@ -40,15 +30,15 @@ const onApplyWithClose = (filters: Filters, closeModal: () => void) => {
   closeModal();
 };
 
-const goToCreationWizardWithClose = (closeModal: () => void) => {
-  closeModal();
-  goToCreationWizard();
-};
+// const goToCreationWizardWithClose = (closeModal: () => void) => {
+//   closeModal();
+//   goToCreationWizard();
+// };
 
-const goToQuickAddWithClose = (closeModal: () => void) => {
-  closeModal();
-  goToQuickAdd();
-};
+// const goToQuickAddWithClose = (closeModal: () => void) => {
+//   closeModal();
+//   goToQuickAdd();
+// };
 </script>
 
 <template>
@@ -61,12 +51,12 @@ const goToQuickAddWithClose = (closeModal: () => void) => {
     <recipe-item v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button>
-        <ion-icon :icon="menu" />
+        <ion-icon />
       </ion-fab-button>
       <ion-fab-list side="top">
         <base-fab-modal>
           <template #fab>
-            <ion-icon :icon="filterCircleOutline" />
+            <ion-icon />
           </template>
           <template #default="{ close }">
             <filter-menu

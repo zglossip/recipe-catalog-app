@@ -2,15 +2,6 @@
 import { injectionKey, useRecipeService } from "@/services/recipeService";
 import { Recipe } from "@/types/Recipe";
 import { inject, toRefs } from "vue";
-import {
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonIcon,
-  IonLabel,
-  IonItem,
-} from "@ionic/vue";
-import { arrowForward } from "ionicons/icons";
 import { useRecipeUploadedDate } from "@/composables/useDateFormat";
 
 //PROPS
@@ -62,7 +53,7 @@ const formattedUploaded = useRecipeUploadedDate(recipe);
           </ion-label>
         </ion-col>
         <ion-col size="auto" :class="$style.recipeItemArrow">
-          <ion-icon :icon="arrowForward" size="large" />
+          <ion-icon  size="large" />
         </ion-col>
       </ion-row>
     </ion-grid>

@@ -2,9 +2,6 @@ import { describe, it, expect, vi, Mock, beforeEach } from "vitest";
 
 vi.mock("@/services/apiService");
 vi.mock("vue-router");
-vi.mock("@ionic/vue", () => ({
-  onIonViewDidEnter: (cb: () => void) => cb(),
-}));
 vi.mock("@/composables/usePageRefresher", () => ({
   usePageRefresher: () => {},
 }));

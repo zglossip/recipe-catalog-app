@@ -9,7 +9,6 @@ import {
 import { Meta, StoryObj } from "@storybook/vue3";
 import ViewRecipeContainer from "./ViewRecipeContainer.vue";
 import { generateRecipe, generateIngredient } from "@tests/data/defaults";
-import { IonPage, IonContent } from "@ionic/vue";
 
 // STUBS
 const stubViewRecipeContainerService = (args: any) => {

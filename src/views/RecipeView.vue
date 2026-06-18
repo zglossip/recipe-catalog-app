@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { provide } from "vue";
-import { onIonViewDidEnter } from "@ionic/vue";
 import ViewRecipeContainer from "@/components/viewRecipe/viewRecipeContainer/ViewRecipeContainer.vue";
 import BasePage from "@/components/common/basePage/BasePage.vue";
 import { usePageRefreshController } from "@/composables/usePageRefresher";
@@ -24,10 +23,6 @@ const viewRecipeContainerService = useViewRecipeContainerService(
 );
 
 provide(INJECTION_KEY, () => viewRecipeContainerService);
-
-onIonViewDidEnter(() => {
-  viewRecipeContainerService.refreshData();
-});
 </script>
 
 <template>

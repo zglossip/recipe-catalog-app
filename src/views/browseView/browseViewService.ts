@@ -1,7 +1,6 @@
 import { Filters } from "@/components/browse/filterMenu/filterMenuService";
 import { fetchRecipes as fetchRecipesApi } from "@/services/apiService";
 import { Recipe } from "@/types/Recipe";
-import { onIonViewWillEnter } from "@ionic/vue";
 import {
   PageRefreshController,
   usePageRefresher,
@@ -115,7 +114,6 @@ export const useBrowseViewService = (
   };
 
   usePageRefresher(refreshData, pageRefreshController);
-  onIonViewWillEnter(refreshData);
 
   return {
     recipes,
