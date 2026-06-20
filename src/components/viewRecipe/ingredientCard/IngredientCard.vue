@@ -6,6 +6,7 @@ import {
 import { inject } from "vue";
 import IngredientItem from "@/components/viewRecipe/ingredientCard/IngredientItem.vue";
 import ButtonCard from "@/components/common/buttonCard/ButtonCard.vue";
+import ProgressSpinner from "primevue/progressspinner";
 
 //PROPS
 
@@ -28,26 +29,22 @@ const { isLoading, ingredients, onClick, displayError } = inject(
 <template>
   <button-card header-text="Ingredients" @click="onClick">
     <div v-if="isLoading">
-      <ion-spinner />
+      <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" />
     </div>
     <div v-else-if="displayError">
-      <ion-item>
-        <ion-label color="danger">Unable to load ingredients.</ion-label>
-      </ion-item>
+      <div class="text-red-500 dark:text-red-400">
+        <span>Unable to load ingredients.</span>
+      </div>
     </div>
     <div v-else-if="ingredients.length === 0">
-      <ion-item>
-        <ion-label> None </ion-label>
-      </ion-item>
+      <span>None</span>
     </div>
     <div v-else>
-      <ion-list>
-        <ingredient-item
-          v-for="ingredient in ingredients"
-          :key="ingredient.name"
-          :ingredient="ingredient"
-        />
-      </ion-list>
+      <ingredient-item
+        v-for="ingredient in ingredients"
+        :key="ingredient.name"
+        :ingredient="ingredient"
+      />
     </div>
   </button-card>
 </template>

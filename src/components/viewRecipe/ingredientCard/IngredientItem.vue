@@ -10,21 +10,16 @@ defineProps<Props>();
 </script>
 
 <template>
-  <ion-item>
-    <ion-label>
-      {{ ingredient.name }}
-      <p v-if="ingredient.notes">{{ ingredient.notes }}</p>
-    </ion-label>
-    <ion-label>
-      <p :class="$style.ingredientMeasurement">
-        {{ formatMeasurementText(ingredient) }}
-      </p>
-    </ion-label>
-  </ion-item>
+  <div class="mb-4">
+    <div class="mb-1">
+      <span class="font-bold mr-2">{{ ingredient.name + ":" }}</span
+      ><span>{{ formatMeasurementText(ingredient) }}</span>
+    </div>
+    <p
+      v-if="ingredient.notes"
+      class="text-sm text-surface-500 dark:text-surface-400"
+    >
+      {{ ingredient.notes }}
+    </p>
+  </div>
 </template>
-
-<style module>
-.ingredientMeasurement {
-  float: right;
-}
-</style>

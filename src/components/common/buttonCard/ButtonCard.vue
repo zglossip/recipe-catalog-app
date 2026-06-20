@@ -38,7 +38,9 @@ const { onClick } = inject(INJECTION_KEY, useButtonCardService)(clickEmit);
       >
     </template>
     <template #content>
-      <slot />
+      <div class="pt-4">
+        <slot />
+      </div>
     </template>
     <template #footer>
       <div class="grid justify-items-end">
