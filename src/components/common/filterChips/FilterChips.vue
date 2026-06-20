@@ -4,6 +4,7 @@ import { FilterChipData } from "@/types/FilterChipData";
 import { FilterType } from "@/types/FilterType";
 import { inject } from "vue";
 import { INJECTION_KEY, useFilterChipService } from "./filterChipService";
+import Card from "primevue/card";
 
 //PROPS
 
@@ -25,8 +26,8 @@ const { onClose } = inject(INJECTION_KEY, useFilterChipService)(removeChipEmit);
 </script>
 
 <template>
-  <ion-card :class="$style.filterChips">
-    <ion-card-content>
+  <Card :class="$style.filterChips">
+    <template #content>
       <filter-chip-set
         :elements="courseTypes"
         icon-url="/img/reshot-icon-fork-V968G523SF.svg"
@@ -45,8 +46,8 @@ const { onClose } = inject(INJECTION_KEY, useFilterChipService)(removeChipEmit);
         icon-alt-text="Tag"
         @close="(tag) => onClose(FilterType.TAG, tag)"
       />
-    </ion-card-content>
-  </ion-card>
+  </template>
+  </Card>
 </template>
 
 <style module>
