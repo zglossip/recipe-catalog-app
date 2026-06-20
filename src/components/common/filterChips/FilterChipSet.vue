@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { inject } from "vue";
 import { INJECTION_KEY, useFilterChipSetService } from "./filterChipSetService";
+import Chip from "primevue/chip";
 
 //PROPS
 
@@ -22,11 +23,10 @@ const { onClose } = inject(INJECTION_KEY, useFilterChipSetService)(closeEmit);
 </script>
 
 <template>
-  <ion-chip v-for="element in elements" :key="element">
-    <ion-avatar>
-      <img :src="iconUrl" :alt="iconAltText" />
-    </ion-avatar>
-    <ion-label>{{ element }}</ion-label>
-    <ion-icon @click="onClose(element)" />
-  </ion-chip>
+    <Chip v-for="element in elements" 
+    :key="element" 
+    :label="element" 
+    :image="iconUrl" 
+    removable
+    @remove="onClose(element)" />
 </template>
