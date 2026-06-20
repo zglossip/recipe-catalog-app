@@ -9,6 +9,7 @@ import {
 import { Meta, StoryObj } from "@storybook/vue3";
 import ViewRecipeContainer from "./ViewRecipeContainer.vue";
 import { generateRecipe, generateIngredient } from "@tests/data/defaults";
+import BasePage from "@/components/common/basePage/BasePage.vue";
 
 // STUBS
 const stubViewRecipeContainerService = (args: any) => {
@@ -87,7 +88,7 @@ const meta: Meta<typeof ViewRecipeContainer> = {
     },
   },
   render: (args: any) => ({
-    components: { ViewRecipeContainer, IonContent, IonPage },
+    components: { ViewRecipeContainer, BasePage },
     setup: () => {
       stubRecipeService(args);
       stubIngredientCardService(args);
@@ -95,7 +96,7 @@ const meta: Meta<typeof ViewRecipeContainer> = {
       stubViewRecipeContainerService(args);
     },
     template: `
-      <ion-page><ion-content><ViewRecipeContainer /></ion-content></ion-page>
+      <BasePage><ViewRecipeContainer /></BasePage>
     `,
   }),
 };

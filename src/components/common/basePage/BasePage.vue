@@ -2,7 +2,10 @@
   <div>
     <Menubar :model="items" />
     <slot name="header" />
-    <slot name="content" />
+    <div class="px-4 py-4">
+      <slot name="content" />
+      <slot />
+    </div>
   </div>
 </template>
 
