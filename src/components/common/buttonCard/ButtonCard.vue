@@ -12,11 +12,13 @@ import Button from "primevue/button";
 interface Props {
   buttonText?: string;
   headerText?: string;
+  subtitleText?: string;
 }
 
 withDefaults(defineProps<Props>(), {
   buttonText: "EDIT",
   headerText: "",
+  subtitleText: "",
 });
 
 //EMITS
@@ -33,9 +35,14 @@ const { onClick } = inject(INJECTION_KEY, useButtonCardService)(clickEmit);
 <template>
   <Card>
     <template #title>
-      <slot name="header"
-        ><span>{{ headerText }}</span></slot
-      >
+      <slot name="header">
+        <span>{{ headerText }}</span>
+      </slot>
+    </template>
+    <template #subtitle>
+      <slot name="subtitle">
+        <span>{{ subtitleText }}</span>
+      </slot>
     </template>
     <template #content>
       <div class="pt-4">

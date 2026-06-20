@@ -41,9 +41,15 @@ const { isLoading, instructions, onClick, displayError } = inject(
     <div v-else-if="instructions.length === 0">
       <span>None</span>
     </div>
-    <div v-else>
+    <div v-else class="px-4">
       <ol>
-        <li v-for="(instruction) in instructions" :key="instruction" class="list-decimal">{{ instruction}}</li>
+        <li
+          v-for="instruction in instructions"
+          :key="instruction"
+          class="list-decimal"
+        >
+          {{ instruction }}
+        </li>
       </ol>
     </div>
   </button-card>
