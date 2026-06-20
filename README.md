@@ -12,6 +12,8 @@ This application requires a REST API. The repository containing the API applicat
 
 It also requires an `.env` file containing a `VITE_BACKEND_BASE` property. This property should be the URL to the backend.
 
+To publish to Chromatic, the `.env` file also needs a `CHROMATIC_PROJECT_TOKEN` property.
+
 For local dev without the backend, run the mock API with `npm run mock:api` (json-server) and keep `VITE_BACKEND_BASE=http://localhost:3001` (see `.env.development`).
 
 ## Instructions
@@ -34,6 +36,13 @@ To run Storybook:
 - Follow the first two steps above
 - Run `npm run storybook`
 - Storybook will be hosted at `http://localhost:6006`
+
+#### Chromatic
+
+To publish Storybook to Chromatic:
+
+- Follow the first two steps above
+- Run `npm run chromatic`
 
 #### Live Tests
 
