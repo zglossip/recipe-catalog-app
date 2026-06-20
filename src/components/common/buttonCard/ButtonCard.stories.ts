@@ -47,7 +47,7 @@ export const HeaderProp: Story = {
 
 export const HeaderSlot: Story = {
   render: (args: any) => ({
-    components: { ButtonCard, IonCardTitle, IonCardSubtitle },
+    components: { ButtonCard },
     setup: () => {
       stubButtonCardService();
       return { ...args };
@@ -64,8 +64,8 @@ export const HeaderSlot: Story = {
   args: {
     content: "Some Content",
     headerHtml: `
-        <ion-card-title>Title</ion-card-title>
-        <ion-card-subtitle>Subtitle</ion-card-subtitle>
+        <h1 class="p-card-title">Title</h1>
+        <h2 class="p-card-subtitle">Subtitle</h2>
         `,
   },
 };

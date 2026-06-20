@@ -4,6 +4,8 @@ import {
   INJECTION_KEY,
 } from "@/components/common/buttonCard/buttonCardService";
 import { inject } from "vue";
+import Card from "primevue/card";
+import Button from "primevue/button";
 
 //PROPS
 
@@ -29,18 +31,19 @@ const { onClick } = inject(INJECTION_KEY, useButtonCardService)(clickEmit);
 </script>
 
 <template>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title v-if="headerText">
-        <span>{{ headerText }}</span>
-      </ion-card-title>
-      <slot name="header" />
-    </ion-card-header>
-    <ion-card-content>
+  <Card>
+    <template #title>
+      <slot name="header"><span>{{ headerText }}</span></slot>
+    </template>
+    <template #content>
       <slot />
-    </ion-card-content>
-    <ion-button @click="onClick" fill="clear">
-      {{ buttonText }}
-    </ion-button>
-  </ion-card>
+    </template>
+    <template #footer>
+      <div class="grid justify-items-end">
+        <Button @click="onClick" severity="primary">
+          {{ buttonText }}
+        </Button>
+      </div>
+    </template>
+  </Card>
 </template>
