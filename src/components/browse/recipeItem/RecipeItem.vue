@@ -3,6 +3,7 @@ import { injectionKey, useRecipeService } from "@/services/recipeService";
 import { Recipe } from "@/types/Recipe";
 import { inject, toRefs } from "vue";
 import { useRecipeUploadedDate } from "@/composables/useDateFormat";
+import Card from "primevue/card";
 
 //PROPS
 
@@ -27,51 +28,36 @@ const formattedUploaded = useRecipeUploadedDate(recipe);
 </script>
 
 <template>
-  <ion-item :class="$style.recipeItem" @click="navigate">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-label>
-            <span :class="$style.recipeItemTitle">
-              {{ recipe.name }}
-            </span>
-            <p>
-              {{ formattedServingTag }}
-            </p>
-
-            <p
-              v-for="(tag, i) in [
-                formattedCuisineTag,
-                formattedCourseTag,
-                formattedTagTag,
-              ]"
-              :key="i"
-            >
-              {{ tag ? tag : "" }}
-            </p>
-            <p v-if="formattedUploaded">Added: {{ formattedUploaded }}</p>
-          </ion-label>
-        </ion-col>
-        <ion-col size="auto" :class="$style.recipeItemArrow">
-          <ion-icon size="large" />
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-item>
+  <Card @click="navigate" cursor="pointer">
+    <template #title>
+      {{ recipe.name }}
+    </template>
+    <template #content>
+      <p class="text-sm text-surface-500 dark:text-surface-400">
+        {{ formattedServingTag }}
+      </p>
+      <p
+        v-for="(tag, i) in [
+          formattedCuisineTag,
+          formattedCourseTag,
+          formattedTagTag,
+        ]"
+        :key="i"
+        class="text-sm text-surface-500 dark:text-surface-400"
+      >
+        {{ tag ? tag : "" }}
+      </p>
+      <p
+        v-if="formattedUploaded"
+        class="text-sm text-surface-500 dark:text-surface-400"
+      >
+        Added: {{ formattedUploaded }}
+      </p>
+    </template>
+    <template #footer>
+      <div class="flex justify-end">
+        <i class="pi pi-arrow-right" />
+      </div>
+    </template>
+  </Card>
 </template>
-
-<style module>
-.recipeItem {
-  cursor: pointer;
-}
-
-.recipeItemTitle {
-  font-size: 1.5rem;
-}
-
-.recipeItemArrow {
-  display: flex;
-  align-items: center;
-  float: right;
-}
-</style>
