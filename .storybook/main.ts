@@ -16,8 +16,6 @@ const config: StorybookConfig = {
     autodocs: "tag",
   },
   viteFinal: async (config) => {
-    config.base = "/storybook/";
-
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,

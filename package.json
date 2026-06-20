@@ -13,7 +13,8 @@
     "format": "prettier .  --write --check --log-level warn",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "mock:api": "json-server --watch db.json --port 3001 --routes routes.json"
+    "mock:api": "json-server --watch db.json --port 3001 --routes routes.json",
+    "chromatic": "chromatic"
   },
   "dependencies": {
     "@capacitor/android": "^5.6.0",
@@ -43,6 +44,7 @@
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/test-utils": "^2.3.0",
     "@vueuse/core": "^10.2.1",
+    "chromatic": "^17.5.0",
     "eslint": "^8.35.0",
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-plugin-vue": "^9.9.0",
