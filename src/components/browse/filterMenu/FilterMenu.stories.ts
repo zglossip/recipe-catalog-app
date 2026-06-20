@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/vue3";
 import FilterMenu from "@/components/browse/filterMenu/FilterMenu.vue";
 import { FilterType } from "@/types/FilterType";
-import { provide, readonly, ref } from "vue";
+import { provide, ref } from "vue";
 import {
   injectionKey,
   FilterMenuService,
@@ -23,24 +23,12 @@ const stubFilterMenuService = (args: any) => {
     injectionKey,
     (): FilterMenuService => ({
       filterOptions: args.filterOptions,
-      currentFilterType: readonly(currentFilterType),
-      setCurrentFilterType: (_currentFilterType: FilterType) => {
-        action("set filter type")(_currentFilterType);
-        currentFilterType.value = _currentFilterType;
-      },
-      filterText: readonly(filterText),
-      setFilterText: (_filterText: string) => {
-        action("set filter text")(_filterText);
-        filterText.value = _filterText;
-      },
-      nameFilter: readonly(nameFilter),
-      setNameFilter: (_nameFilter: string) => {
-        action("set name filter")(_nameFilter);
-        nameFilter.value = _nameFilter;
-      },
-      courseTypeFilters: courseTypeFilters,
-      cuisineTypeFilters: cuisineTypeFilters,
-      tagFilters: tagFilters,
+      currentFilterType,
+      filterText,
+      nameFilter,
+      courseTypeFilters,
+      cuisineTypeFilters,
+      tagFilters,
       addFilter: () => {
         action("adding filter")({
           currentFilterType: currentFilterType.value,
@@ -95,7 +83,13 @@ const stubFilterMenuService = (args: any) => {
             return;
         }
       },
-      apply: action("apply"),
+      apply: () =>
+        action("apply")({
+          nameFilter: nameFilter.value,
+          courseTypeFilters: courseTypeFilters.value,
+          cuisineTypeFilters: cuisineTypeFilters.value,
+          tagFilters: tagFilters.value,
+        }),
     }),
   );
 };

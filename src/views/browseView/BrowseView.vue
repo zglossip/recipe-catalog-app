@@ -43,48 +43,23 @@ const onApplyWithClose = (filters: Filters, closeModal: () => void) => {
 
 <template>
   <BasePage title="Browse">
+    <template #header>
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Browse Recipes</h1>
+        <filter-menu
+          :starting-name="name"
+          :starting-course-types="courses"
+          :starting-cuisine-types="cuisines"
+          :starting-tags="tags"
+          @apply="(filters) => onApplyWithClose(filters, close)"
+        />
+      </div>
+    </template>
     <ion-item v-if="displayError">
       <ion-label color="danger"
         >Unable to load recipes. Please try again.</ion-label
       >
     </ion-item>
     <recipe-item v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button>
-        <ion-icon />
-      </ion-fab-button>
-      <ion-fab-list side="top">
-        <base-fab-modal>
-          <template #fab>
-            <ion-icon />
-          </template>
-          <template #default="{ close }">
-            <filter-menu
-              :starting-name="name"
-              :starting-course-types="courses"
-              :starting-cuisine-types="cuisines"
-              :starting-tags="tags"
-              @apply="(filters) => onApplyWithClose(filters, close)"
-            />
-          </template>
-        </base-fab-modal>
-        <!-- TODO: Add some sort of menu here to replace the FAB-->
-        <!-- <base-fab-modal>
-          <template #fab>
-            <ion-icon :icon="addCircleOutline" />
-          </template>
-          <template #default="{ close }">
-            <ion-list>
-              <ion-item button @click="goToCreationWizardWithClose(close)">
-                <ion-label>Creation Wizard</ion-label>
-              </ion-item>
-              <ion-item button @click="goToQuickAddWithClose(close)">
-                <ion-label>Quick Add</ion-label>
-              </ion-item>
-            </ion-list>
-          </template>
-        </base-fab-modal> -->
-      </ion-fab-list>
-    </ion-fab>
   </BasePage>
 </template>

@@ -33,7 +33,9 @@ const { onClick } = inject(INJECTION_KEY, useButtonCardService)(clickEmit);
 <template>
   <Card>
     <template #title>
-      <slot name="header"><span>{{ headerText }}</span></slot>
+      <slot name="header"
+        ><span>{{ headerText }}</span></slot
+      >
     </template>
     <template #content>
       <slot />

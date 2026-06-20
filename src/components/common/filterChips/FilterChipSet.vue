@@ -23,10 +23,12 @@ const { onClose } = inject(INJECTION_KEY, useFilterChipSetService)(closeEmit);
 </script>
 
 <template>
-    <Chip v-for="element in elements" 
-    :key="element" 
-    :label="element" 
-    :image="iconUrl" 
+  <Chip
+    v-for="element in elements"
+    :key="element"
+    :label="element"
+    :image="iconUrl"
     removable
-    @remove="onClose(element)" />
+    @remove="onClose(element)"
+  />
 </template>

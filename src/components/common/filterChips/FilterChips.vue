@@ -46,7 +46,7 @@ const { onClose } = inject(INJECTION_KEY, useFilterChipService)(removeChipEmit);
         icon-alt-text="Tag"
         @close="(tag) => onClose(FilterType.TAG, tag)"
       />
-  </template>
+    </template>
   </Card>
 </template>
 
