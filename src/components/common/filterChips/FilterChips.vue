@@ -26,28 +26,24 @@ const { onClose } = inject(INJECTION_KEY, useFilterChipService)(removeChipEmit);
 </script>
 
 <template>
-  <Card :class="$style.filterChips">
-    <template #content>
-      <filter-chip-set
-        :elements="courseTypes"
-        icon-url="/img/reshot-icon-fork-V968G523SF.svg"
-        icon-alt-text="Course"
-        @close="(course) => onClose(FilterType.COURSE, course)"
-      />
-      <filter-chip-set
-        :elements="cuisineTypes"
-        icon-url="/img/reshot-icon-globe-JHXCB4TD7Q.svg"
-        icon-alt-text="Cuisine"
-        @close="(cuisine) => onClose(FilterType.CUISINE, cuisine)"
-      />
-      <filter-chip-set
-        :elements="tags"
-        icon-url="/img/reshot-icon-tag-YU436XW8QJ.svg"
-        icon-alt-text="Tag"
-        @close="(tag) => onClose(FilterType.TAG, tag)"
-      />
-    </template>
-  </Card>
+  <filter-chip-set
+    :elements="courseTypes"
+    icon-url="/img/reshot-icon-fork-V968G523SF.svg"
+    icon-alt-text="Course"
+    @close="(course) => onClose(FilterType.COURSE, course)"
+  />
+  <filter-chip-set
+    :elements="cuisineTypes"
+    icon-url="/img/reshot-icon-globe-JHXCB4TD7Q.svg"
+    icon-alt-text="Cuisine"
+    @close="(cuisine) => onClose(FilterType.CUISINE, cuisine)"
+  />
+  <filter-chip-set
+    :elements="tags"
+    icon-url="/img/reshot-icon-tag-YU436XW8QJ.svg"
+    icon-alt-text="Tag"
+    @close="(tag) => onClose(FilterType.TAG, tag)"
+  />
 </template>
 
 <style module>
