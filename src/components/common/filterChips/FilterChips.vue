@@ -4,7 +4,6 @@ import { FilterChipData } from "@/types/FilterChipData";
 import { FilterType } from "@/types/FilterType";
 import { inject } from "vue";
 import { INJECTION_KEY, useFilterChipService } from "./filterChipService";
-import Card from "primevue/card";
 
 //PROPS
 

@@ -4,7 +4,6 @@ import FilterMenu from "@/components/browse/filterMenu/FilterMenu.vue";
 import BasePage from "@/components/common/basePage/BasePage.vue";
 //import BaseFabModal from "@/components/common/baseFabModal/BaseFabModal.vue";
 import { useBrowseViewService } from "./browseViewService";
-import { Filters } from "@/components/browse/filterMenu/filterMenuService";
 
 const {
   recipes,

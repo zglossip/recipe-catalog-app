@@ -22,7 +22,6 @@ const {
   newIngredientName,
   newIngredientQuantity,
   newIngredientUom,
-  onItemReorder,
   onAddIngredient,
   onSaveClick,
   onCancelClick,

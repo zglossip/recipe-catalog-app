@@ -4,6 +4,7 @@ import {
   INJECTION_KEY,
   useEditInstructionService,
 } from "./editInstructionsService";
+import { Card, InputText, Button, OrderList } from "primevue";
 
 //PROPS
 
@@ -18,7 +19,6 @@ const props = defineProps<Props>();
 const {
   instructions,
   newInstructionText,
-  onItemReorder,
   onAddInstruction,
   onSaveClick,
   onCancelClick,
@@ -30,43 +30,32 @@ const disableAddButton = computed(() => {
 </script>
 
 <template>
-  <ion-card>
-    <ion-card-content>
-      <ion-list>
-        <ion-item>
-          <ion-grid class="ion-no-padding">
-            <ion-row class="ion-align-items-end">
-              <ion-col size="9">
-                <ion-input
-                  label="Instruction"
-                  label-placement="stacked"
-                  v-model="newInstructionText"
-                />
-              </ion-col>
-              <ion-col size="3" class="ion-text-right">
-                <ion-button
-                  @click="onAddInstruction"
-                  :disabled="disableAddButton"
-                  >Add</ion-button
-                >
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-item>
-        <ion-reorder-group
-          :disabled="false"
-          @ion-item-reorder="onItemReorder($event)"
-        >
-          <ion-item v-for="instruction in instructions" :key="instruction">
-            <ion-label>
-              {{ instruction }}
-            </ion-label>
-            <ion-reorder slot="end"></ion-reorder>
-          </ion-item>
-        </ion-reorder-group>
-      </ion-list>
-    </ion-card-content>
-    <ion-button fill="clear" @click="onCancelClick">Cancel</ion-button>
-    <ion-button fill="clear" @click="onSaveClick">Confirm</ion-button>
-  </ion-card>
+  <Card>
+    <template #content>
+      <div class="flex items-end gap-2 mb-4">
+        <div class="flex flex-col gap-2 flex-auto">
+          <label class="font-semibold" for="rc-instruction">
+            Instruction
+          </label>
+          <InputText id="rc-instruction" v-model="newInstructionText" />
+        </div>
+        <Button
+          icon="pi pi-plus"
+          @click="onAddInstruction"
+          :disabled="disableAddButton"
+        />
+      </div>
+      <OrderList v-model="instructions" class="mb-4">
+        <template #option="{ option }">
+          {{ option }}
+        </template>
+      </OrderList>
+    </template>
+    <template #footer>
+      <div class="flex justify-end gap-2">
+        <Button @click="onCancelClick" severity="secondary">Cancel</Button>
+        <Button @click="onSaveClick">Confirm</Button>
+      </div>
+    </template>
+  </Card>
 </template>
