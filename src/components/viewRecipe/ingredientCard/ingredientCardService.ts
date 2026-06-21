@@ -1,7 +1,6 @@
 import { Ingredient } from "@/types/Ingredient";
 import { Ref, ref } from "vue";
 import { fetchIngredients } from "@/services/apiService";
-import { usePageRefresher } from "@/composables/usePageRefresher";
 
 export const INJECTION_KEY = Symbol();
 
@@ -37,7 +36,6 @@ export const useIngredientCardService = (
     }
   };
 
-  usePageRefresher(refreshData);
   void refreshData();
 
   return { ingredients, isLoading, onClick, displayError };

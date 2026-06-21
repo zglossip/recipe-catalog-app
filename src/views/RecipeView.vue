@@ -2,7 +2,6 @@
 import { provide } from "vue";
 import ViewRecipeContainer from "@/components/viewRecipe/viewRecipeContainer/ViewRecipeContainer.vue";
 import BasePage from "@/components/common/basePage/BasePage.vue";
-import { usePageRefreshController } from "@/composables/usePageRefresher";
 import {
   INJECTION_KEY,
   useViewRecipeContainerService,
@@ -15,11 +14,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const pageRefreshController = usePageRefreshController();
-
 const viewRecipeContainerService = useViewRecipeContainerService(
   Number(props.id),
-  pageRefreshController,
 );
 
 provide(INJECTION_KEY, () => viewRecipeContainerService);

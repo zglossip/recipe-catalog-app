@@ -101,10 +101,10 @@ const {
     </template>
     <template #footer>
       <div class="flex justify-end gap-4">
-        <Button label="Cancel" @click="onCancelClick" severity="secondary"/>
+        <Button label="Cancel" @click="onCancelClick" severity="secondary" />
         <Button label="Confirm" @click="onSaveClick" />
       </div>
-    </template> 
+    </template>
   </Card>
 </template>
 

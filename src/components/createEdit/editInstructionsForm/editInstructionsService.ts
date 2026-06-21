@@ -2,7 +2,6 @@ import { fetchInstructions, saveInstructions } from "@/services/apiService";
 import { reorderIonicItems } from "@/services/util";
 import { Ref, ref } from "vue";
 import { useRouter } from "vue-router";
-import { usePageRefresher } from "@/composables/usePageRefresher";
 
 export const INJECTION_KEY = Symbol();
 
@@ -31,8 +30,6 @@ export const useEditInstructionService = (
       instructions.value = response.data.instructions;
     }
   };
-
-  usePageRefresher(refreshData);
 
   if (id !== undefined) {
     void refreshData();

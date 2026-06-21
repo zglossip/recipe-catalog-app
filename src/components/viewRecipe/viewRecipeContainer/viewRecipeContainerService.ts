@@ -2,10 +2,6 @@ import { fetchRecipe } from "@/services/apiService";
 import { Recipe } from "@/types/Recipe";
 import { Ref, ref } from "vue";
 import { useRouter } from "vue-router";
-import {
-  PageRefreshController,
-  usePageRefresher,
-} from "@/composables/usePageRefresher";
 
 export const INJECTION_KEY = Symbol();
 
@@ -21,7 +17,6 @@ export interface ViewRecipeContainerService {
 
 export const useViewRecipeContainerService = (
   id: number,
-  pageRefreshController?: PageRefreshController,
 ): ViewRecipeContainerService => {
   const isLoading: Ref<boolean> = ref(false);
   const recipe: Ref<Recipe | null> = ref(null);
@@ -56,8 +51,6 @@ export const useViewRecipeContainerService = (
   const onEditInstructions = () => {
     router.push(`/recipe/edit/${id}/instructions`);
   };
-
-  usePageRefresher(refreshData, pageRefreshController);
 
   return {
     isLoading,

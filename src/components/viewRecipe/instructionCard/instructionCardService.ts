@@ -1,6 +1,5 @@
 import { fetchInstructions } from "@/services/apiService";
 import { Ref, ref } from "vue";
-import { usePageRefresher } from "@/composables/usePageRefresher";
 
 export const injectionKey = Symbol();
 
@@ -36,7 +35,6 @@ export const useInstructionCardService = (
     }
   };
 
-  usePageRefresher(refreshData);
   void refreshData();
 
   return { instructions, isLoading, onClick, displayError };

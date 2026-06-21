@@ -1,10 +1,6 @@
 import { Filters } from "@/components/browse/filterMenu/filterMenuService";
 import { fetchRecipes as fetchRecipesApi } from "@/services/apiService";
 import { Recipe } from "@/types/Recipe";
-import {
-  PageRefreshController,
-  usePageRefresher,
-} from "@/composables/usePageRefresher";
 import { Ref, ref } from "vue";
 import { LocationQueryValue, useRoute, useRouter } from "vue-router";
 
@@ -23,9 +19,7 @@ export interface BrowseViewService {
 
 export const injectionKey = Symbol();
 
-export const useBrowseViewService = (
-  pageRefreshController?: PageRefreshController,
-): BrowseViewService => {
+export const useBrowseViewService = (): BrowseViewService => {
   const recipes: Ref<Recipe[]> = ref([]);
   const name: Ref<string> = ref("");
   const courses: Ref<string[]> = ref([]);
@@ -112,8 +106,6 @@ export const useBrowseViewService = (
   const goToQuickAdd = (): void => {
     router.push("/recipe/create/single");
   };
-
-  usePageRefresher(refreshData, pageRefreshController);
 
   return {
     recipes,
