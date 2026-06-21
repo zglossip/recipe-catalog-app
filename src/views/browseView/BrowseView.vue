@@ -51,11 +51,11 @@ const {
         />
       </div>
     </template>
-    <ion-item v-if="displayError">
-      <ion-label color="danger"
-        >Unable to load recipes. Please try again.</ion-label
-      >
-    </ion-item>
+    <div v-if="displayError">
+      <div class="text-red-500 dark:text-red-400">
+        <span>Unable to load ingredients.</span>
+      </div>
+    </div>
     <recipe-item v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
   </BasePage>
 </template>

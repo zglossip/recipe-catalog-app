@@ -1,5 +1,4 @@
 import { fetchIngredients, saveIngredients } from "@/services/apiService";
-import { reorderIonicItems } from "@/services/util";
 import { Ingredient } from "@/types/Ingredient";
 import { Ref, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -11,7 +10,6 @@ export interface EditIngredientsService {
   newIngredientName: Ref<string>;
   newIngredientQuantity: Ref<number>;
   newIngredientUom: Ref<string>;
-  onItemReorder: (evt: CustomEvent) => void;
   onAddIngredient: () => void;
   onSaveClick: () => void;
   onCancelClick: () => void;
@@ -40,10 +38,6 @@ export const useEditIngredientService = (
   if (id !== undefined) {
     void refreshData();
   }
-
-  const onItemReorder = (evt: CustomEvent) => {
-    reorderIonicItems(evt, ingredients.value);
-  };
 
   const onAddIngredient = () => {
     const name = newIngredientName.value.trim();
@@ -91,7 +85,6 @@ export const useEditIngredientService = (
     newIngredientName,
     newIngredientQuantity,
     newIngredientUom,
-    onItemReorder,
     onAddIngredient,
     onSaveClick,
     onCancelClick,

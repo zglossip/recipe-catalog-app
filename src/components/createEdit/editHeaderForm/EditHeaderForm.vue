@@ -107,10 +107,3 @@ const {
     </template>
   </Card>
 </template>
-
-<style scoped>
-ion-select {
-  margin-right: -1rem;
-  margin-left: -1rem;
-}
-</style>

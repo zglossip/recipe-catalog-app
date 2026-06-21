@@ -18,16 +18,6 @@ const stubEditInstructionsService = (args: any) => {
     (): EditInstructionsService => ({
       instructions,
       newInstructionText,
-      onItemReorder: (evt: CustomEvent) => {
-        const from = evt.detail.from;
-        const to = evt.detail.to;
-
-        const element = instructions.value.splice(from, 1)[0];
-        instructions.value.splice(to, 0, element);
-
-        action("items reordered")({ to, from });
-        evt.detail.complete();
-      },
       onAddInstruction: () => {
         const text = newInstructionText.value.trim();
         if (!text) {

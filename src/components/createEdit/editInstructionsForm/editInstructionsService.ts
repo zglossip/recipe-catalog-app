@@ -1,5 +1,4 @@
 import { fetchInstructions, saveInstructions } from "@/services/apiService";
-import { reorderIonicItems } from "@/services/util";
 import { Ref, ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -8,7 +7,6 @@ export const INJECTION_KEY = Symbol();
 export interface EditInstructionsService {
   instructions: Ref<string[]>;
   newInstructionText: Ref<string>;
-  onItemReorder: (evt: CustomEvent) => void;
   onAddInstruction: () => void;
   onSaveClick: () => void;
   onCancelClick: () => void;
@@ -34,10 +32,6 @@ export const useEditInstructionService = (
   if (id !== undefined) {
     void refreshData();
   }
-
-  const onItemReorder = (evt: CustomEvent) => {
-    reorderIonicItems(evt, instructions.value);
-  };
 
   const onAddInstruction = () => {
     const text = newInstructionText.value.trim();
@@ -68,7 +62,6 @@ export const useEditInstructionService = (
   return {
     instructions,
     newInstructionText,
-    onItemReorder,
     onAddInstruction,
     onSaveClick,
     onCancelClick,

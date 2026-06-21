@@ -8,13 +8,11 @@ import {
   fetchIngredients,
   saveIngredients,
 } from "@/services/apiService";
-import { reorderIonicItems } from "@/services/util";
 import { useRouter } from "vue-router";
 import { generateIngredient } from "@tests/data/defaults";
 import { IngredientList } from "@/types/IngredientList";
 
 vi.mock("@/services/apiService");
-vi.mock("@/services/util");
 vi.mock("vue-router");
 vi.mock("@/composables/usePageRefresher", () => ({
   usePageRefresher: () => {},
@@ -40,7 +38,6 @@ const setup = (
     ok: true,
     data: null,
   } satisfies ApiResult<null>);
-  (reorderIonicItems as Mock).mockImplementation(() => {});
   (fetchIngredients as Mock).mockResolvedValue({
     ok: true,
     data: ingredientListResponse,
@@ -59,18 +56,6 @@ describe("editIngredientsService", () => {
 
     expect(fetchIngredients as Mock).toHaveBeenCalledWith(recipeId);
     expect(service.ingredients.value[0].name).toBe(testName);
-  });
-
-  it("reorders ingredients via reorderIonicItems", () => {
-    const { service } = setup();
-    const fakeEvent = { detail: { from: 0, to: 1, complete: vi.fn() } } as any;
-
-    service.onItemReorder(fakeEvent);
-
-    expect(reorderIonicItems as Mock).toHaveBeenCalledWith(
-      fakeEvent,
-      service.ingredients.value,
-    );
   });
 
   it("saves ingredients and navigates back", async () => {
