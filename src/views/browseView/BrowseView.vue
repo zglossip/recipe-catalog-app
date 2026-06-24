@@ -53,9 +53,11 @@ const {
     </template>
     <div v-if="displayError">
       <div class="text-red-500 dark:text-red-400">
-        <span>Unable to load ingredients.</span>
+        <span>Unable to load recipe(s).</span>
       </div>
     </div>
-    <recipe-item v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
+    <div class="grid grid-cols-4 gap-4">
+      <recipe-item v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" class="col-span-4 sm:col-span-2 xl:col-span-1"/>
+    </div>
   </BasePage>
 </template>

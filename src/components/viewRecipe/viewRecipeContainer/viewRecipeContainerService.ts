@@ -52,6 +52,8 @@ export const useViewRecipeContainerService = (
     router.push(`/recipe/edit/${id}/instructions`);
   };
 
+  refreshData();
+
   return {
     isLoading,
     recipe,

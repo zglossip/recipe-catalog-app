@@ -8,6 +8,9 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), legacy(), tailwindcss()],
+  optimizeDeps: {
+    entries: ["index.html"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

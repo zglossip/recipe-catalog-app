@@ -1,6 +1,7 @@
 import { fetchInstructions, saveInstructions } from "@/services/apiService";
 import { Ref, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useToast } from "@/composables/useToast";
 
 export const INJECTION_KEY = Symbol();
 
@@ -18,6 +19,7 @@ export const useEditInstructionService = (
   const instructions: Ref<string[]> = ref([]);
   const newInstructionText = ref("");
   const router = useRouter();
+  const { showToast } = useToast();
 
   const refreshData = async (): Promise<void> => {
     if (id === undefined) {
@@ -43,15 +45,19 @@ export const useEditInstructionService = (
     newInstructionText.value = "";
   };
 
-  const onSaveClick = () => {
+  const onSaveClick = async () => {
     if (id === undefined) {
       router.go(-1);
       return;
     }
-    saveInstructions({
+    const response = await saveInstructions({
       instructions: instructions.value,
       recipeId: id,
     });
+    if (!response.ok) {
+      showToast("Unable to save instructions.");
+      return;
+    }
     router.go(-1);
   };
 
