@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, Mock } from "vitest";
 
 vi.mock("@/services/apiService");
-vi.mock("@/composables/usePageRefresher", () => ({
-  usePageRefresher: () => {},
-}));
 
 import {
   useEditHeaderContainerService,

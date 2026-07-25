@@ -33,7 +33,7 @@ describe("useRecipeService.ts", () => {
   it("formats one cuisine", () => {
     const recipe: Recipe = generateRecipe({ cuisineTypes: ["Test Cuisine"] });
     const { service } = setup({ recipe });
-    expect(service.formattedCuisineTag.value).toBe("Cusine: Test Cuisine");
+    expect(service.formattedCuisineTag.value).toBe("Cuisine: Test Cuisine");
   });
 
   it("formats multipe cuisines", () => {
@@ -42,7 +42,7 @@ describe("useRecipeService.ts", () => {
     });
     const { service } = setup({ recipe });
     expect(service.formattedCuisineTag.value).toBe(
-      "Cusines: Test Cuisine 1, Test Cuisine 2",
+      "Cuisines: Test Cuisine 1, Test Cuisine 2",
     );
   });
 

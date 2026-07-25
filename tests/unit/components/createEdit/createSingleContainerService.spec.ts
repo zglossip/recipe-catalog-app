@@ -66,7 +66,7 @@ describe("createSingleContainerService", () => {
     service.servingAmount.value = 4;
     service.servingName.value = "plates";
     service.sourceUrl.value = "https://example.com";
-    service.ingredientsString.value = "2,cups,Rice,washed\nSugar,Sweet";
+    service.ingredientsString.value = "2|cups|Rice|washed\nSugar|Sweet";
     service.instructionsString.value = "Mix thoroughly\nServe warm";
 
     await service.add();
