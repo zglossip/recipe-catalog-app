@@ -5,6 +5,7 @@ import { FILTER_OPTIONS } from "@/services/constants";
 import { FilterType } from "@/types/FilterType";
 import { FilterChipData } from "@/types/FilterChipData";
 import { useRouter } from "vue-router";
+import { useToast } from "@/composables/useToast";
 
 export const INJECTION_KEY = Symbol();
 
@@ -37,6 +38,7 @@ export const useEditHeaderFormService = (
   const filterText = ref("");
 
   const router = useRouter();
+  const { showToast } = useToast();
 
   watch(
     () => recipe.value,
@@ -109,6 +111,7 @@ export const useEditHeaderFormService = (
         tags: newTags.value,
       });
       if (!response.ok) {
+        showToast("Unable to save recipe.");
         return;
       }
     } else {
@@ -122,6 +125,7 @@ export const useEditHeaderFormService = (
         uploaded: null,
       });
       if (!response.ok) {
+        showToast("Unable to create recipe.");
         return;
       }
     }

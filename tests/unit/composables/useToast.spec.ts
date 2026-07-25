@@ -32,6 +32,16 @@ describe("useToast", () => {
     expect(toastState.color).toBe("success");
   });
 
+  it("bumps the id for each toast, including repeats", () => {
+    const { toastState, showToast } = useToast();
+
+    showToast("Same message");
+    const firstId = toastState.id;
+    showToast("Same message");
+
+    expect(toastState.id).toBe(firstId + 1);
+  });
+
   it("dismisses the toast", () => {
     const { toastState, showToast, dismissToast } = useToast();
 

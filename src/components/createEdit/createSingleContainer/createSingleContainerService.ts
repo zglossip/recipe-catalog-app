@@ -8,6 +8,7 @@ import { IngredientList } from "@/types/IngredientList";
 import { InstructionList } from "@/types/InstructionList";
 import { Recipe } from "@/types/Recipe";
 import { ref, Ref } from "vue";
+import { useToast } from "@/composables/useToast";
 
 export const INJECTION_KEY = Symbol();
 
@@ -46,8 +47,16 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
   const ingredientsString = ref("");
   const instructionsString = ref("");
 
+  const { showToast } = useToast();
+
   async function add(): Promise<void> {
-    await addRecipe();
+    try {
+      await addRecipe();
+    } catch (error) {
+      showToast(
+        error instanceof Error ? error.message : "Unable to add recipe.",
+      );
+    }
   }
 
   async function addRecipe(): Promise<void> {
@@ -66,6 +75,7 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
     const response: ApiResult<Recipe> = await createRecipe(recipe);
 
     if (!response.ok) {
+      showToast("Unable to create recipe.");
       return;
     }
 
@@ -98,7 +108,9 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
                 notes: partitionedLine[1],
               };
             default:
-              throw new Error("Error parsing ingredient");
+              throw new Error(
+                `Unable to parse ingredient: "${ingredientLine}"`,
+              );
           }
         },
       ),
