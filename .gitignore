@@ -37,3 +37,10 @@ npm-debug.log*
 
 # Storybook build output
 storybook-static
+
+# Claude Code
+# CLAUDE.md and .claude/settings.json are intentionally tracked — they are
+# shared project context. Only machine-local and scratch paths are ignored.
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/worktrees/
