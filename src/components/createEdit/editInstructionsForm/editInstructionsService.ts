@@ -9,7 +9,7 @@ export interface EditInstructionsService {
   instructions: Ref<string[]>;
   newInstructionText: Ref<string>;
   onAddInstruction: () => void;
-  onSaveClick: () => void;
+  onSaveClick: () => Promise<void>;
   onCancelClick: () => void;
 }
 
