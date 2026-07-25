@@ -55,7 +55,7 @@ export const useEditInstructionService = (
       recipeId: id,
     });
     if (!response.ok) {
-      showToast("Unable to save instructions.");
+      showToast(`Unable to save instructions: ${response.error}`);
       return;
     }
     router.go(-1);

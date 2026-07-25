@@ -75,7 +75,7 @@ export const useEditIngredientService = (
       recipeId: id,
     });
     if (!response.ok) {
-      showToast("Unable to save ingredients.");
+      showToast(`Unable to save ingredients: ${response.error}`);
       return;
     }
 

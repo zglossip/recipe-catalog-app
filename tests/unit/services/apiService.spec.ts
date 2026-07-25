@@ -1,19 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { generateRecipe } from "@tests/data/defaults";
 
-const { showToast } = vi.hoisted(() => ({
-  showToast: vi.fn(),
-}));
-
 const axiosMock = vi.hoisted(() => ({
   get: vi.fn(),
   post: vi.fn(),
   put: vi.fn(),
   isAxiosError: vi.fn(),
-}));
-
-vi.mock("@/composables/useToast", () => ({
-  useToast: () => ({ showToast }),
 }));
 
 vi.mock("@/services/constants", () => ({
@@ -48,7 +40,6 @@ describe("apiService", () => {
     axiosMock.post.mockReset();
     axiosMock.put.mockReset();
     axiosMock.isAxiosError.mockReset();
-    showToast.mockReset();
   });
 
   it("fetchRecipes handles success", async () => {
@@ -75,7 +66,6 @@ describe("apiService", () => {
     const result = await fetchRecipes("", [], [], []);
 
     expect(result).toEqual({ ok: false, error: "No recipes" });
-    expect(showToast).toHaveBeenCalledWith("No recipes");
   });
 
   it("fetchRecipe handles success", async () => {
@@ -95,7 +85,6 @@ describe("apiService", () => {
     const result = await fetchRecipe(12);
 
     expect(result).toEqual({ ok: false, error: "Recipe missing" });
-    expect(showToast).toHaveBeenCalledWith("Recipe missing");
   });
 
   it("createRecipe handles success", async () => {
@@ -119,7 +108,6 @@ describe("apiService", () => {
     const result = await createRecipe(recipe);
 
     expect(result).toEqual({ ok: false, error: "Create failed" });
-    expect(showToast).toHaveBeenCalledWith("Create failed");
   });
 
   it("saveRecipe handles success", async () => {
@@ -143,7 +131,6 @@ describe("apiService", () => {
     const result = await saveRecipe(recipe);
 
     expect(result).toEqual({ ok: false, error: "Save failed" });
-    expect(showToast).toHaveBeenCalledWith("Save failed");
   });
 
   it("fetchIngredients handles success", async () => {
@@ -168,7 +155,6 @@ describe("apiService", () => {
     const result = await fetchIngredients(5);
 
     expect(result).toEqual({ ok: false, error: "Ingredients missing" });
-    expect(showToast).toHaveBeenCalledWith("Ingredients missing");
   });
 
   it("saveIngredients handles success", async () => {
@@ -198,7 +184,6 @@ describe("apiService", () => {
     const result = await saveIngredients(ingredientList);
 
     expect(result).toEqual({ ok: false, error: "Save ingredients failed" });
-    expect(showToast).toHaveBeenCalledWith("Save ingredients failed");
   });
 
   it("fetchInstructions handles success", async () => {
@@ -223,7 +208,6 @@ describe("apiService", () => {
     const result = await fetchInstructions(7);
 
     expect(result).toEqual({ ok: false, error: "Instructions missing" });
-    expect(showToast).toHaveBeenCalledWith("Instructions missing");
   });
 
   it("saveInstructions handles success", async () => {
@@ -253,6 +237,5 @@ describe("apiService", () => {
     const result = await saveInstructions(instructionList);
 
     expect(result).toEqual({ ok: false, error: "Save instructions failed" });
-    expect(showToast).toHaveBeenCalledWith("Save instructions failed");
   });
 });

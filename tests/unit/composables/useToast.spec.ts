@@ -1,53 +1,67 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { useToast } from "@/composables/useToast";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const resetToast = () => {
-  const { showToast, dismissToast } = useToast();
-  showToast("", "danger");
-  dismissToast();
-};
+const { emit } = vi.hoisted(() => ({ emit: vi.fn() }));
+
+vi.mock("primevue/toasteventbus", () => ({
+  default: { emit },
+}));
+
+import { useToast } from "@/composables/useToast";
 
 describe("useToast", () => {
   beforeEach(() => {
-    resetToast();
+    emit.mockReset();
   });
 
-  it("opens with a default danger color", () => {
-    const { toastState, showToast } = useToast();
+  it("queues a toast with a default danger severity", () => {
+    const { showToast } = useToast();
 
     showToast("Something went wrong");
 
-    expect(toastState.isOpen).toBe(true);
-    expect(toastState.message).toBe("Something went wrong");
-    expect(toastState.color).toBe("danger");
+    expect(emit).toHaveBeenCalledWith("add", {
+      severity: "error",
+      detail: "Something went wrong",
+      life: 4000,
+    });
   });
 
-  it("opens with a provided color", () => {
-    const { toastState, showToast } = useToast();
+  it("maps a provided color to a PrimeVue severity", () => {
+    const { showToast } = useToast();
 
     showToast("Looks good", "success");
 
-    expect(toastState.isOpen).toBe(true);
-    expect(toastState.message).toBe("Looks good");
-    expect(toastState.color).toBe("success");
+    expect(emit).toHaveBeenCalledWith("add", {
+      severity: "success",
+      detail: "Looks good",
+      life: 4000,
+    });
   });
 
-  it("bumps the id for each toast, including repeats", () => {
-    const { toastState, showToast } = useToast();
+  it("falls back to error for an unknown color", () => {
+    const { showToast } = useToast();
 
-    showToast("Same message");
-    const firstId = toastState.id;
-    showToast("Same message");
+    showToast("Odd color", "chartreuse");
 
-    expect(toastState.id).toBe(firstId + 1);
+    expect(emit).toHaveBeenCalledWith(
+      "add",
+      expect.objectContaining({ severity: "error" }),
+    );
   });
 
-  it("dismisses the toast", () => {
-    const { toastState, showToast, dismissToast } = useToast();
+  it("queues each call, including exact repeats", () => {
+    const { showToast } = useToast();
 
-    showToast("Close me", "warning");
+    showToast("Same message");
+    showToast("Same message");
+
+    expect(emit).toHaveBeenCalledTimes(2);
+  });
+
+  it("dismisses all toasts", () => {
+    const { dismissToast } = useToast();
+
     dismissToast();
 
-    expect(toastState.isOpen).toBe(false);
+    expect(emit).toHaveBeenCalledWith("remove-all-groups");
   });
 });

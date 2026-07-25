@@ -3,7 +3,6 @@ import axios from "axios";
 import { BACKEND_BASE } from "@/services/constants";
 import { IngredientList } from "@/types/IngredientList";
 import { InstructionList } from "@/types/InstructionList";
-import { useToast } from "@/composables/useToast";
 
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string };
 
@@ -35,12 +34,13 @@ const getErrorMessage = (error: unknown): string => {
   return "Request failed.";
 };
 
-const handleError = <T>(error: unknown): ApiResult<T> => {
-  const { showToast } = useToast();
-  const message = getErrorMessage(error);
-  showToast(message);
-  return { ok: false, error: message };
-};
+// Callers own the user-facing message: they pair `result.error` with the action
+// that failed ("Unable to save ingredients: ...") or render it inline via their
+// own `displayError` flag. Toasting here too would double up.
+const handleError = <T>(error: unknown): ApiResult<T> => ({
+  ok: false,
+  error: getErrorMessage(error),
+});
 
 const get = async <T>(url: string): Promise<ApiResult<T>> => {
   try {

@@ -75,7 +75,7 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
     const response: ApiResult<Recipe> = await createRecipe(recipe);
 
     if (!response.ok) {
-      showToast("Unable to create recipe.");
+      showToast(`Unable to create recipe: ${response.error}`);
       return;
     }
 
@@ -116,7 +116,11 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
       ),
     };
 
-    await saveIngredients(ingredientList);
+    const response = await saveIngredients(ingredientList);
+
+    if (!response.ok) {
+      showToast(`Unable to save ingredients: ${response.error}`);
+    }
   }
 
   async function addInstructions(recipeId: number): Promise<void> {
@@ -125,7 +129,11 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
       instructions: splitList(instructionsString.value, "\n"),
     };
 
-    await saveInstructions(instructionList);
+    const response = await saveInstructions(instructionList);
+
+    if (!response.ok) {
+      showToast(`Unable to save instructions: ${response.error}`);
+    }
   }
 
   return {

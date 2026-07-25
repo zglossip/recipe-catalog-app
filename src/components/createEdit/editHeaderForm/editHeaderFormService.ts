@@ -111,7 +111,7 @@ export const useEditHeaderFormService = (
         tags: newTags.value,
       });
       if (!response.ok) {
-        showToast("Unable to save recipe.");
+        showToast(`Unable to save recipe: ${response.error}`);
         return;
       }
     } else {
@@ -125,7 +125,7 @@ export const useEditHeaderFormService = (
         uploaded: null,
       });
       if (!response.ok) {
-        showToast("Unable to create recipe.");
+        showToast(`Unable to create recipe: ${response.error}`);
         return;
       }
     }
