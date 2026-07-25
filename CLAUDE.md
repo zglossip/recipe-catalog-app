@@ -56,7 +56,7 @@ Preserve this three-part shape when adding components. Logic in the `.vue` file 
 
 Unit tests live in `tests/unit/`, mirroring the `src/` path, and target **service files, not components** — services are called directly as plain functions and their returned refs asserted. There are no component mount tests; visual coverage is Storybook/Chromatic's job.
 
-Convention: `vi.mock("@/services/apiService")` and `vi.mock("vue-router")` at the top of the file (hoisted above imports), then a local `setup(options)` helper that wires mock return values and returns `{ service, ...handles }`. Fixtures come from `tests/data/defaults.ts` (`generateRecipe`, `generateIngredient` — override-taking factories). `tests/util.ts` is fully commented out; ignore it.
+Convention: `vi.mock("@/services/apiService")` and `vi.mock("vue-router")` at the top of the file (hoisted above imports), then a local `setup(options)` helper that wires mock return values and returns `{ service, ...handles }`. Fixtures come from `tests/data/defaults.ts` (`generateRecipe`, `generateIngredient` — override-taking factories).
 
 ### Data flow
 

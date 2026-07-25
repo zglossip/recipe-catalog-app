@@ -12,7 +12,7 @@ export interface EditIngredientsService {
   newIngredientQuantity: Ref<number>;
   newIngredientUom: Ref<string>;
   onAddIngredient: () => void;
-  onSaveClick: () => void;
+  onSaveClick: () => Promise<void>;
   onCancelClick: () => void;
 }
 
