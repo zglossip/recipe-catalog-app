@@ -42,8 +42,8 @@ describe("filterMenuService", () => {
   it("Can add filter chip to course", () => {
     const { service } = setup();
 
-    service.setFilterText("New Value");
-    service.setCurrentFilterType(FilterType.COURSE);
+    service.filterText.value = "New Value";
+    service.currentFilterType.value = FilterType.COURSE;
 
     service.addFilter();
 
@@ -53,8 +53,8 @@ describe("filterMenuService", () => {
   it("Can add filter chip to cuisine", () => {
     const { service } = setup();
 
-    service.setFilterText("New Value");
-    service.setCurrentFilterType(FilterType.CUISINE);
+    service.filterText.value = "New Value";
+    service.currentFilterType.value = FilterType.CUISINE;
 
     service.addFilter();
 
@@ -64,8 +64,8 @@ describe("filterMenuService", () => {
   it("Can add filter chip to tag", () => {
     const { service } = setup();
 
-    service.setFilterText("New Value");
-    service.setCurrentFilterType(FilterType.TAG);
+    service.filterText.value = "New Value";
+    service.currentFilterType.value = FilterType.TAG;
 
     service.addFilter();
 

@@ -12,9 +12,6 @@ import { useRouter } from "vue-router";
 
 vi.mock("@/services/apiService");
 vi.mock("vue-router");
-vi.mock("@/composables/usePageRefresher", () => ({
-  usePageRefresher: () => {},
-}));
 
 const defaultInstructionsResponse = {
   recipeId: 5,
@@ -59,7 +56,7 @@ describe("editInstructionsService", () => {
     const { service, routerGo } = setup();
     await vi.waitFor(() => expect(service.instructions.value.length).toBe(2));
 
-    service.onSaveClick();
+    await service.onSaveClick();
 
     expect(saveInstructions as Mock).toHaveBeenCalledWith({
       recipeId: defaultInstructionsResponse.recipeId,

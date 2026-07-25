@@ -1,14 +1,10 @@
 import { describe, it, expect, vi, Mock } from "vitest";
 
 vi.mock("@/services/apiService");
-vi.mock("@/composables/usePageRefresher", () => ({
-  usePageRefresher: () => {},
-}));
 
 import {
   InstructionCardService,
   useInstructionCardService,
-  formatInstruction,
 } from "@/components/viewRecipe/instructionCard/instructionCardService";
 import { ApiResult, fetchInstructions } from "@/services/apiService";
 
@@ -60,9 +56,5 @@ describe("instructionCardService", () => {
     await vi.waitFor(() => expect(service.isLoading.value).toBe(false));
 
     expect(service.instructions.value).toEqual(instructions);
-  });
-
-  it("formats instruction", () => {
-    expect(formatInstruction(100, "instruction")).toEqual("100: instruction");
   });
 });

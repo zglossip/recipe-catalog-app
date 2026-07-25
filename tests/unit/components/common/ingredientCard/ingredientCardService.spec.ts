@@ -8,9 +8,6 @@ import { generateIngredient } from "@tests/data/defaults";
 import { Ingredient } from "@/types/Ingredient";
 
 vi.mock("@/services/apiService");
-vi.mock("@/composables/usePageRefresher", () => ({
-  usePageRefresher: () => {},
-}));
 
 interface SetupOptions {
   recipeId?: number;

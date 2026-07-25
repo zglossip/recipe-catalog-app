@@ -14,9 +14,6 @@ import { IngredientList } from "@/types/IngredientList";
 
 vi.mock("@/services/apiService");
 vi.mock("vue-router");
-vi.mock("@/composables/usePageRefresher", () => ({
-  usePageRefresher: () => {},
-}));
 
 const recipeId = 10;
 const testName = "Test Ingredient";
@@ -62,7 +59,7 @@ describe("editIngredientsService", () => {
     const { service, routerGo } = setup();
     await vi.waitFor(() => expect(service.ingredients.value.length).toBe(1));
 
-    service.onSaveClick();
+    await service.onSaveClick();
 
     expect(saveIngredients as Mock).toHaveBeenCalledWith({
       recipeId,
