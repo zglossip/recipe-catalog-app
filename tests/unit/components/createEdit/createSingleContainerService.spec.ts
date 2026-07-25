@@ -96,6 +96,52 @@ describe("createSingleContainerService", () => {
     });
   });
 
+  it("submits empty lists when the list fields are left blank", async () => {
+    const { service, createRecipe, saveIngredients, saveInstructions } =
+      setup();
+
+    service.name.value = "Plain Dish";
+
+    await service.add();
+
+    expect(createRecipe).toHaveBeenCalledWith(
+      expect.objectContaining({
+        courseTypes: [],
+        cuisineTypes: [],
+        tags: [],
+      }),
+    );
+
+    expect(saveIngredients).toHaveBeenCalledWith({
+      recipeId: 55,
+      ingredients: [],
+    });
+
+    expect(saveInstructions).toHaveBeenCalledWith({
+      recipeId: 55,
+      instructions: [],
+    });
+  });
+
+  it("ignores blank and whitespace-only entries in list fields", async () => {
+    const { service, createRecipe, saveInstructions } = setup();
+
+    service.name.value = "Padded Dish";
+    service.coursesString.value = "Lunch, , Dinner,";
+    service.instructionsString.value = "Mix\n\n   \nServe";
+
+    await service.add();
+
+    expect(createRecipe).toHaveBeenCalledWith(
+      expect.objectContaining({ courseTypes: ["Lunch", "Dinner"] }),
+    );
+
+    expect(saveInstructions).toHaveBeenCalledWith({
+      recipeId: 55,
+      instructions: ["Mix", "Serve"],
+    });
+  });
+
   it("does not save ingredients or instructions when creation fails", async () => {
     const { service, saveIngredients, saveInstructions } = setup(null);
 
