@@ -75,5 +75,5 @@ Layering is `views/` → `components/` → services. `src/components/` is groupe
 ## Notes
 
 - The project was migrated off Ionic/Capacitor onto PrimeVue; it is a responsive web app, not a native shell. Do not reintroduce `ion-*` components or Capacitor plugins.
-- `basePageService.js` is the last un-migrated `.js` file — everything else is TypeScript.
+- `basePageService.js` is the one service written in JavaScript rather than TypeScript — a deliberate choice, not leftover from the migration, and not a cleanup task. Consequence: it is the only service that exports no `XService` interface, so its `inject` seam is untyped and story stubs for it are unchecked.
 - ESLint has `@typescript-eslint/no-explicit-any` disabled, and stories lean on `args: any`.
