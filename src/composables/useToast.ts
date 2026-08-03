@@ -1,4 +1,4 @@
-import ToastEventBus from "primevue/toasteventbus";
+import type { ToastServiceMethods } from "primevue/toastservice";
 import type { ToastMessageOptions } from "primevue/toast";
 
 type ToastColor = "primary" | "success" | "warning" | "danger" | string;
@@ -21,20 +21,27 @@ const SUMMARIES: Record<string, string> = {
   danger: "Error",
 };
 
+let toastApi: ToastServiceMethods | undefined;
+
 /**
- * Raises toasts on PrimeVue's Toast queue. `ToastEventBus` is a module-level
- * singleton that the `<Toast />` in `App.vue` subscribes to directly, so this
- * works outside a component — which it has to, because `apiService.handleError`
- * calls it from a plain function. PrimeVue's inject-based `useToast` would
- * require a `setup()` context.
+ * Hands PrimeVue's ToastService to `useToast`. Called once from `main.ts`.
+ *
+ * `primevue/usetoast` is the usual way to reach this API, but it is `inject()`
+ * based and so only works during `setup()`. `apiService.handleError` toasts
+ * from an axios catch block, long after setup has returned, so we take the same
+ * service off the app instance instead.
  */
+export const registerToastService = (service: ToastServiceMethods) => {
+  toastApi = service;
+};
+
 export const useToast = () => ({
   showToast: (message: string, color: ToastColor = "danger") =>
-    ToastEventBus.emit("add", {
+    toastApi?.add({
       severity: SEVERITIES[color] ?? "error",
       summary: SUMMARIES[color] ?? "Error",
       detail: message,
       life: TOAST_LIFE_MS,
     }),
-  dismissToast: () => ToastEventBus.emit("remove-all-groups"),
+  dismissToast: () => toastApi?.removeAllGroups(),
 });

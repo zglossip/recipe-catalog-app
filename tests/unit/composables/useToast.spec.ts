@@ -1,24 +1,33 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { ToastServiceMethods } from "primevue/toastservice";
+import { registerToastService, useToast } from "@/composables/useToast";
 
-const { emit } = vi.hoisted(() => ({ emit: vi.fn() }));
+const add = vi.fn();
+const removeAllGroups = vi.fn();
 
-vi.mock("primevue/toasteventbus", () => ({
-  default: { emit },
-}));
+const setup = () => {
+  registerToastService({
+    add,
+    remove: vi.fn(),
+    removeGroup: vi.fn(),
+    removeAllGroups,
+  } as ToastServiceMethods);
 
-import { useToast } from "@/composables/useToast";
+  return useToast();
+};
 
 describe("useToast", () => {
   beforeEach(() => {
-    emit.mockReset();
+    add.mockReset();
+    removeAllGroups.mockReset();
   });
 
-  it("queues a toast with a default danger severity", () => {
-    const { showToast } = useToast();
+  it("adds a toast with a default danger severity", () => {
+    const { showToast } = setup();
 
     showToast("Something went wrong");
 
-    expect(emit).toHaveBeenCalledWith("add", {
+    expect(add).toHaveBeenCalledWith({
       severity: "error",
       summary: "Error",
       detail: "Something went wrong",
@@ -27,11 +36,11 @@ describe("useToast", () => {
   });
 
   it("maps a provided color to a PrimeVue severity", () => {
-    const { showToast } = useToast();
+    const { showToast } = setup();
 
     showToast("Looks good", "success");
 
-    expect(emit).toHaveBeenCalledWith("add", {
+    expect(add).toHaveBeenCalledWith({
       severity: "success",
       summary: "Success",
       detail: "Looks good",
@@ -40,30 +49,29 @@ describe("useToast", () => {
   });
 
   it("falls back to error for an unknown color", () => {
-    const { showToast } = useToast();
+    const { showToast } = setup();
 
     showToast("Odd color", "chartreuse");
 
-    expect(emit).toHaveBeenCalledWith(
-      "add",
+    expect(add).toHaveBeenCalledWith(
       expect.objectContaining({ severity: "error", summary: "Error" }),
     );
   });
 
   it("queues each call, including exact repeats", () => {
-    const { showToast } = useToast();
+    const { showToast } = setup();
 
     showToast("Same message");
     showToast("Same message");
 
-    expect(emit).toHaveBeenCalledTimes(2);
+    expect(add).toHaveBeenCalledTimes(2);
   });
 
   it("dismisses all toasts", () => {
-    const { dismissToast } = useToast();
+    const { dismissToast } = setup();
 
     dismissToast();
 
-    expect(emit).toHaveBeenCalledWith("remove-all-groups");
+    expect(removeAllGroups).toHaveBeenCalled();
   });
 });
