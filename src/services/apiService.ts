@@ -21,6 +21,10 @@ const mapRecipe = (recipe: Recipe & { uploaded: string | null }): Recipe => ({
 
 const MAX_DETAIL_LENGTH = 200;
 
+// Matches an opening or closing tag, so a bare comparison ("must be < 100")
+// still reads as a sentence.
+const MARKUP = /<\/?[a-z!]/i;
+
 /**
  * Callers concatenate `error` straight into a toast, so the backend's response
  * body is only worth relaying when it reads like a sentence. An HTML error page
@@ -30,7 +34,7 @@ const isPresentableDetail = (detail: string): boolean =>
   detail.length > 0 &&
   detail.length <= MAX_DETAIL_LENGTH &&
   !detail.includes("\n") &&
-  !detail.includes("<");
+  !MARKUP.test(detail);
 
 const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {

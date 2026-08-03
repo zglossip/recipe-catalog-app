@@ -5,7 +5,14 @@ import {
   useEditIngredientService,
 } from "./editIngredientsService";
 import { formatMeasurementText } from "@/services/util";
-import { InputText, Card, InputNumber, Button, OrderList } from "primevue";
+import {
+  InputText,
+  Card,
+  InputNumber,
+  Button,
+  OrderList,
+  ProgressSpinner,
+} from "primevue";
 
 //PROPS
 
@@ -22,6 +29,7 @@ const {
   newIngredientName,
   newIngredientQuantity,
   newIngredientUom,
+  isLoading,
   loadFailed,
   onAddIngredient,
   onSaveClick,
@@ -29,7 +37,9 @@ const {
 } = inject(INJECTION_KEY, useEditIngredientService)(props.recipeId);
 
 const disableAddButton = computed(() => {
-  return newIngredientName.value.trim() === "";
+  return (
+    newIngredientName.value.trim() === "" || isLoading.value || loadFailed.value
+  );
 });
 </script>
 
@@ -67,13 +77,16 @@ const disableAddButton = computed(() => {
             :disabled="disableAddButton"
           />
         </div>
+        <div v-if="isLoading" class="col-span-12 flex justify-center mb-4">
+          <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" />
+        </div>
         <div
-          v-if="loadFailed"
+          v-else-if="loadFailed"
           class="col-span-12 text-red-500 dark:text-red-400"
         >
           Ingredients could not be loaded.
         </div>
-        <div class="flex flex-col gap-2 mb-4 col-span-12">
+        <div v-else class="flex flex-col gap-2 mb-4 col-span-12">
           <OrderList v-model="ingredients" data-key="name">
             <template #option="{ option }">
               <div class="flex flex-col">
@@ -96,7 +109,11 @@ const disableAddButton = computed(() => {
     <template #footer>
       <div class="flex justify-end gap-4">
         <Button label="Cancel" @click="onCancelClick" severity="secondary" />
-        <Button label="Confirm" @click="onSaveClick" :disabled="loadFailed" />
+        <Button
+          label="Confirm"
+          @click="onSaveClick"
+          :disabled="isLoading || loadFailed"
+        />
       </div>
     </template>
   </Card>

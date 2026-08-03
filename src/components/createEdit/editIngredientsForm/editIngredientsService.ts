@@ -11,6 +11,7 @@ export interface EditIngredientsService {
   newIngredientName: Ref<string>;
   newIngredientQuantity: Ref<number>;
   newIngredientUom: Ref<string>;
+  isLoading: Ref<boolean>;
   loadFailed: Ref<boolean>;
   onAddIngredient: () => void;
   onSaveClick: () => Promise<void>;
@@ -24,6 +25,8 @@ export const useEditIngredientService = (
   const newIngredientName = ref("");
   const newIngredientQuantity = ref(1);
   const newIngredientUom = ref("");
+  // Create mode never fetches, so it is never loading.
+  const isLoading = ref(id !== undefined);
   const loadFailed = ref(false);
 
   const router = useRouter();
@@ -33,17 +36,22 @@ export const useEditIngredientService = (
     if (id === undefined) {
       return;
     }
-    const response = await fetchIngredients(id);
-    if (!response.ok) {
-      // The list stays empty on failure, which is indistinguishable from a
-      // recipe with no ingredients — so say so, and block the save that would
-      // otherwise overwrite the real list with `[]`.
-      loadFailed.value = true;
-      showToast(`Unable to load ingredients: ${response.error}`);
-      return;
+    isLoading.value = true;
+    try {
+      const response = await fetchIngredients(id);
+      if (!response.ok) {
+        // The list stays empty on failure, which is indistinguishable from a
+        // recipe with no ingredients — so say so, and block the save that
+        // would otherwise overwrite the real list with `[]`.
+        loadFailed.value = true;
+        showToast(`Unable to load ingredients: ${response.error}`);
+        return;
+      }
+      loadFailed.value = false;
+      ingredients.value = response.data.ingredients;
+    } finally {
+      isLoading.value = false;
     }
-    loadFailed.value = false;
-    ingredients.value = response.data.ingredients;
   };
 
   if (id !== undefined) {
@@ -79,6 +87,12 @@ export const useEditIngredientService = (
       router.go(-1);
       return;
     }
+    // Until the fetch settles the list is an empty placeholder, not the
+    // recipe's real ingredients — saving here would wipe them out.
+    if (isLoading.value) {
+      showToast("Ingredients are still loading. Try again in a moment.");
+      return;
+    }
     if (loadFailed.value) {
       showToast(
         "Ingredients could not be loaded, so they cannot be saved. Reload and try again.",
@@ -106,6 +120,7 @@ export const useEditIngredientService = (
     newIngredientName,
     newIngredientQuantity,
     newIngredientUom,
+    isLoading,
     loadFailed,
     onAddIngredient,
     onSaveClick,

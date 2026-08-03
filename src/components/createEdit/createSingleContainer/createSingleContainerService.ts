@@ -78,7 +78,7 @@ export interface CreateSingleContainerService {
   sourceUrl: Ref<string>;
   ingredientsString: Ref<string>;
   instructionsString: Ref<string>;
-  add: () => void;
+  add: () => Promise<void>;
 }
 
 export function useCreateSingleContainerService(): CreateSingleContainerService {

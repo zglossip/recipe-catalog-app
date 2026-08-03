@@ -83,6 +83,21 @@ describe("apiService", () => {
     });
   });
 
+  it("relays a short plain message containing a comparison operator", async () => {
+    axiosMock.isAxiosError.mockReturnValue(true);
+    axiosMock.get.mockRejectedValue({
+      response: { data: "servingAmount must be < 100" },
+      message: "Request failed with status code 400",
+    });
+
+    const result = await fetchRecipes("", [], [], []);
+
+    expect(result).toEqual({
+      ok: false,
+      error: "servingAmount must be < 100",
+    });
+  });
+
   it("falls back to the axios message when the response body is a stack trace", async () => {
     axiosMock.isAxiosError.mockReturnValue(true);
     axiosMock.get.mockRejectedValue({

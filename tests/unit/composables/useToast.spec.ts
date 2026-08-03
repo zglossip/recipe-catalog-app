@@ -20,6 +20,7 @@ describe("useToast", () => {
 
     expect(emit).toHaveBeenCalledWith("add", {
       severity: "error",
+      summary: "Error",
       detail: "Something went wrong",
       life: 4000,
     });
@@ -32,6 +33,7 @@ describe("useToast", () => {
 
     expect(emit).toHaveBeenCalledWith("add", {
       severity: "success",
+      summary: "Success",
       detail: "Looks good",
       life: 4000,
     });
@@ -44,7 +46,7 @@ describe("useToast", () => {
 
     expect(emit).toHaveBeenCalledWith(
       "add",
-      expect.objectContaining({ severity: "error" }),
+      expect.objectContaining({ severity: "error", summary: "Error" }),
     );
   });
 

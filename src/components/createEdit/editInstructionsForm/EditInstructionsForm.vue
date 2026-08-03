@@ -4,7 +4,7 @@ import {
   INJECTION_KEY,
   useEditInstructionService,
 } from "./editInstructionsService";
-import { Card, InputText, Button, OrderList } from "primevue";
+import { Card, InputText, Button, OrderList, ProgressSpinner } from "primevue";
 
 //PROPS
 
@@ -19,6 +19,7 @@ const props = defineProps<Props>();
 const {
   instructions,
   newInstructionText,
+  isLoading,
   loadFailed,
   onAddInstruction,
   onSaveClick,
@@ -26,7 +27,11 @@ const {
 } = inject(INJECTION_KEY, useEditInstructionService)(props.recipeId);
 
 const disableAddButton = computed(() => {
-  return newInstructionText.value.trim() === "";
+  return (
+    newInstructionText.value.trim() === "" ||
+    isLoading.value ||
+    loadFailed.value
+  );
 });
 </script>
 
@@ -46,10 +51,13 @@ const disableAddButton = computed(() => {
           :disabled="disableAddButton"
         />
       </div>
-      <div v-if="loadFailed" class="mb-4 text-red-500 dark:text-red-400">
+      <div v-if="isLoading" class="mb-4 flex justify-center">
+        <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" />
+      </div>
+      <div v-else-if="loadFailed" class="mb-4 text-red-500 dark:text-red-400">
         Instructions could not be loaded.
       </div>
-      <OrderList v-model="instructions" class="mb-4">
+      <OrderList v-else v-model="instructions" class="mb-4">
         <template #option="{ option }">
           {{ option }}
         </template>
@@ -58,7 +66,9 @@ const disableAddButton = computed(() => {
     <template #footer>
       <div class="flex justify-end gap-2">
         <Button @click="onCancelClick" severity="secondary">Cancel</Button>
-        <Button @click="onSaveClick" :disabled="loadFailed">Confirm</Button>
+        <Button @click="onSaveClick" :disabled="isLoading || loadFailed">
+          Confirm
+        </Button>
       </div>
     </template>
   </Card>
