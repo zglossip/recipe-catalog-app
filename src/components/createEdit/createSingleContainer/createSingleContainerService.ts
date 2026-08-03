@@ -4,6 +4,7 @@ import {
   saveIngredients,
   saveInstructions,
 } from "@/services/apiService";
+import { Ingredient } from "@/types/Ingredient";
 import { IngredientList } from "@/types/IngredientList";
 import { InstructionList } from "@/types/InstructionList";
 import { Recipe } from "@/types/Recipe";
@@ -22,6 +23,50 @@ const splitList = (value: string, separator: string): string[] =>
     .split(separator)
     .map((entry) => entry.trim())
     .filter((entry) => entry.length > 0);
+
+type ParseResult =
+  | { ok: true; ingredients: Ingredient[] }
+  | { ok: false; error: string };
+
+/**
+ * Runs before anything is persisted. A malformed line used to surface only
+ * after `createRecipe` had already succeeded, leaving an orphaned recipe with
+ * neither ingredients nor instructions.
+ */
+const parseIngredients = (value: string): ParseResult => {
+  const ingredients: Ingredient[] = [];
+
+  for (const ingredientLine of splitList(value, "\n")) {
+    const partitionedLine = ingredientLine.split("|");
+
+    switch (partitionedLine.length) {
+      case 4:
+      case 3:
+        ingredients.push({
+          quantity: +partitionedLine[0],
+          uom: partitionedLine[1],
+          name: partitionedLine[2],
+          notes: partitionedLine[3],
+        });
+        break;
+      case 2:
+      case 1:
+        ingredients.push({
+          quantity: 1,
+          name: partitionedLine[0],
+          notes: partitionedLine[1],
+        });
+        break;
+      default:
+        return {
+          ok: false,
+          error: `Unable to parse ingredient: "${ingredientLine}"`,
+        };
+    }
+  }
+
+  return { ok: true, ingredients };
+};
 
 export interface CreateSingleContainerService {
   name: Ref<string>;
@@ -50,16 +95,13 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
   const { showToast } = useToast();
 
   async function add(): Promise<void> {
-    try {
-      await addRecipe();
-    } catch (error) {
-      showToast(
-        error instanceof Error ? error.message : "Unable to add recipe.",
-      );
-    }
-  }
+    const parsed = parseIngredients(ingredientsString.value);
 
-  async function addRecipe(): Promise<void> {
+    if (!parsed.ok) {
+      showToast(parsed.error);
+      return;
+    }
+
     const recipe: Recipe = {
       name: name.value,
       courseTypes: splitList(coursesString.value, ","),
@@ -80,41 +122,15 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
     }
 
     // We can assume the recipe has an ID if it was successful.
-    await addIngredients(response.data.id!);
+    await addIngredients(response.data.id!, parsed.ingredients);
     await addInstructions(response.data.id!);
   }
 
-  async function addIngredients(recipeId: number): Promise<void> {
-    const ingredientList: IngredientList = {
-      recipeId,
-      ingredients: splitList(ingredientsString.value, "\n").map(
-        (ingredientLine) => {
-          const partitionedLine = ingredientLine.split("|");
-
-          switch (partitionedLine.length) {
-            case 4:
-            case 3:
-              return {
-                quantity: +partitionedLine[0],
-                uom: partitionedLine[1],
-                name: partitionedLine[2],
-                notes: partitionedLine[3],
-              };
-            case 2:
-            case 1:
-              return {
-                quantity: 1,
-                name: partitionedLine[0],
-                notes: partitionedLine[1],
-              };
-            default:
-              throw new Error(
-                `Unable to parse ingredient: "${ingredientLine}"`,
-              );
-          }
-        },
-      ),
-    };
+  async function addIngredients(
+    recipeId: number,
+    ingredients: Ingredient[],
+  ): Promise<void> {
+    const ingredientList: IngredientList = { recipeId, ingredients };
 
     const response = await saveIngredients(ingredientList);
 

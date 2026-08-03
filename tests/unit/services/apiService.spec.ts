@@ -68,6 +68,51 @@ describe("apiService", () => {
     expect(result).toEqual({ ok: false, error: "No recipes" });
   });
 
+  it("falls back to the axios message when the response body is an HTML page", async () => {
+    axiosMock.isAxiosError.mockReturnValue(true);
+    axiosMock.get.mockRejectedValue({
+      response: { data: "<html><body>500 Internal Server Error</body></html>" },
+      message: "Request failed with status code 500",
+    });
+
+    const result = await fetchRecipes("", [], [], []);
+
+    expect(result).toEqual({
+      ok: false,
+      error: "Request failed with status code 500",
+    });
+  });
+
+  it("falls back to the axios message when the response body is a stack trace", async () => {
+    axiosMock.isAxiosError.mockReturnValue(true);
+    axiosMock.get.mockRejectedValue({
+      response: { data: `NullPointerException\n\tat Recipe.load(Recipe.java)` },
+      message: "Request failed with status code 500",
+    });
+
+    const result = await fetchRecipes("", [], [], []);
+
+    expect(result).toEqual({
+      ok: false,
+      error: "Request failed with status code 500",
+    });
+  });
+
+  it("falls back to the axios message when the response body is overlong", async () => {
+    axiosMock.isAxiosError.mockReturnValue(true);
+    axiosMock.get.mockRejectedValue({
+      response: { data: "x".repeat(201) },
+      message: "Request failed with status code 500",
+    });
+
+    const result = await fetchRecipes("", [], [], []);
+
+    expect(result).toEqual({
+      ok: false,
+      error: "Request failed with status code 500",
+    });
+  });
+
   it("fetchRecipe handles success", async () => {
     const data = generateRecipe({ id: 12 });
     axiosMock.get.mockResolvedValue({ data });

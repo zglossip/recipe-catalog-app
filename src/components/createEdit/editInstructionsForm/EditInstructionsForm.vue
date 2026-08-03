@@ -19,6 +19,7 @@ const props = defineProps<Props>();
 const {
   instructions,
   newInstructionText,
+  loadFailed,
   onAddInstruction,
   onSaveClick,
   onCancelClick,
@@ -45,6 +46,9 @@ const disableAddButton = computed(() => {
           :disabled="disableAddButton"
         />
       </div>
+      <div v-if="loadFailed" class="mb-4 text-red-500 dark:text-red-400">
+        Instructions could not be loaded.
+      </div>
       <OrderList v-model="instructions" class="mb-4">
         <template #option="{ option }">
           {{ option }}
@@ -54,7 +58,7 @@ const disableAddButton = computed(() => {
     <template #footer>
       <div class="flex justify-end gap-2">
         <Button @click="onCancelClick" severity="secondary">Cancel</Button>
-        <Button @click="onSaveClick">Confirm</Button>
+        <Button @click="onSaveClick" :disabled="loadFailed">Confirm</Button>
       </div>
     </template>
   </Card>

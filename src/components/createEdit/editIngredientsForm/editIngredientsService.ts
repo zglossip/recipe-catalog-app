@@ -11,6 +11,7 @@ export interface EditIngredientsService {
   newIngredientName: Ref<string>;
   newIngredientQuantity: Ref<number>;
   newIngredientUom: Ref<string>;
+  loadFailed: Ref<boolean>;
   onAddIngredient: () => void;
   onSaveClick: () => Promise<void>;
   onCancelClick: () => void;
@@ -23,6 +24,7 @@ export const useEditIngredientService = (
   const newIngredientName = ref("");
   const newIngredientQuantity = ref(1);
   const newIngredientUom = ref("");
+  const loadFailed = ref(false);
 
   const router = useRouter();
   const { showToast } = useToast();
@@ -32,9 +34,16 @@ export const useEditIngredientService = (
       return;
     }
     const response = await fetchIngredients(id);
-    if (response.ok) {
-      ingredients.value = response.data.ingredients;
+    if (!response.ok) {
+      // The list stays empty on failure, which is indistinguishable from a
+      // recipe with no ingredients — so say so, and block the save that would
+      // otherwise overwrite the real list with `[]`.
+      loadFailed.value = true;
+      showToast(`Unable to load ingredients: ${response.error}`);
+      return;
     }
+    loadFailed.value = false;
+    ingredients.value = response.data.ingredients;
   };
 
   if (id !== undefined) {
@@ -70,6 +79,12 @@ export const useEditIngredientService = (
       router.go(-1);
       return;
     }
+    if (loadFailed.value) {
+      showToast(
+        "Ingredients could not be loaded, so they cannot be saved. Reload and try again.",
+      );
+      return;
+    }
     const response = await saveIngredients({
       ingredients: ingredients.value,
       recipeId: id,
@@ -91,6 +106,7 @@ export const useEditIngredientService = (
     newIngredientName,
     newIngredientQuantity,
     newIngredientUom,
+    loadFailed,
     onAddIngredient,
     onSaveClick,
     onCancelClick,

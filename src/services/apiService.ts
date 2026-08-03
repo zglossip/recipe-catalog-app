@@ -19,10 +19,27 @@ const mapRecipe = (recipe: Recipe & { uploaded: string | null }): Recipe => ({
   uploaded: parseUploaded(recipe.uploaded),
 });
 
+const MAX_DETAIL_LENGTH = 200;
+
+/**
+ * Callers concatenate `error` straight into a toast, so the backend's response
+ * body is only worth relaying when it reads like a sentence. An HTML error page
+ * or a stack trace comes back as a string too, and neither belongs on screen.
+ */
+const isPresentableDetail = (detail: string): boolean =>
+  detail.length > 0 &&
+  detail.length <= MAX_DETAIL_LENGTH &&
+  !detail.includes("\n") &&
+  !detail.includes("<");
+
 const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
-    if (typeof error.response?.data === "string") {
-      return error.response.data;
+    const detail =
+      typeof error.response?.data === "string"
+        ? error.response.data.trim()
+        : undefined;
+    if (detail !== undefined && isPresentableDetail(detail)) {
+      return detail;
     }
     return error.message || "Request failed.";
   }

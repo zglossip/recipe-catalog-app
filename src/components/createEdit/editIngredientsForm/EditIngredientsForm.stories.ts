@@ -23,6 +23,7 @@ const stubEditIngredientsFormService = (args: any) => {
       newIngredientName,
       newIngredientQuantity,
       newIngredientUom,
+      loadFailed: ref(args.loadFailed ?? false),
       onAddIngredient: () => {
         const name = newIngredientName.value.trim();
         if (!name) {
@@ -89,5 +90,12 @@ export const Default: Story = {};
 export const Empty: Story = {
   args: {
     ingredients: [],
+  },
+};
+
+export const LoadFailed: Story = {
+  args: {
+    ingredients: [],
+    loadFailed: true,
   },
 };

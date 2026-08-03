@@ -22,6 +22,7 @@ const {
   newIngredientName,
   newIngredientQuantity,
   newIngredientUom,
+  loadFailed,
   onAddIngredient,
   onSaveClick,
   onCancelClick,
@@ -66,6 +67,12 @@ const disableAddButton = computed(() => {
             :disabled="disableAddButton"
           />
         </div>
+        <div
+          v-if="loadFailed"
+          class="col-span-12 text-red-500 dark:text-red-400"
+        >
+          Ingredients could not be loaded.
+        </div>
         <div class="flex flex-col gap-2 mb-4 col-span-12">
           <OrderList v-model="ingredients" data-key="name">
             <template #option="{ option }">
@@ -89,7 +96,7 @@ const disableAddButton = computed(() => {
     <template #footer>
       <div class="flex justify-end gap-4">
         <Button label="Cancel" @click="onCancelClick" severity="secondary" />
-        <Button label="Confirm" @click="onSaveClick" />
+        <Button label="Confirm" @click="onSaveClick" :disabled="loadFailed" />
       </div>
     </template>
   </Card>

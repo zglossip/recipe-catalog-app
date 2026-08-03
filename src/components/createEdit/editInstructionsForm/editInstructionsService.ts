@@ -8,6 +8,7 @@ export const INJECTION_KEY = Symbol();
 export interface EditInstructionsService {
   instructions: Ref<string[]>;
   newInstructionText: Ref<string>;
+  loadFailed: Ref<boolean>;
   onAddInstruction: () => void;
   onSaveClick: () => Promise<void>;
   onCancelClick: () => void;
@@ -18,6 +19,7 @@ export const useEditInstructionService = (
 ): EditInstructionsService => {
   const instructions: Ref<string[]> = ref([]);
   const newInstructionText = ref("");
+  const loadFailed = ref(false);
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -26,9 +28,16 @@ export const useEditInstructionService = (
       return;
     }
     const response = await fetchInstructions(id);
-    if (response.ok) {
-      instructions.value = response.data.instructions;
+    if (!response.ok) {
+      // The list stays empty on failure, which is indistinguishable from a
+      // recipe with no instructions — so say so, and block the save that would
+      // otherwise overwrite the real list with `[]`.
+      loadFailed.value = true;
+      showToast(`Unable to load instructions: ${response.error}`);
+      return;
     }
+    loadFailed.value = false;
+    instructions.value = response.data.instructions;
   };
 
   if (id !== undefined) {
@@ -50,6 +59,12 @@ export const useEditInstructionService = (
       router.go(-1);
       return;
     }
+    if (loadFailed.value) {
+      showToast(
+        "Instructions could not be loaded, so they cannot be saved. Reload and try again.",
+      );
+      return;
+    }
     const response = await saveInstructions({
       instructions: instructions.value,
       recipeId: id,
@@ -68,6 +83,7 @@ export const useEditInstructionService = (
   return {
     instructions,
     newInstructionText,
+    loadFailed,
     onAddInstruction,
     onSaveClick,
     onCancelClick,

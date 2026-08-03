@@ -18,6 +18,7 @@ const stubEditInstructionsService = (args: any) => {
     (): EditInstructionsService => ({
       instructions,
       newInstructionText,
+      loadFailed: ref(args.loadFailed ?? false),
       onAddInstruction: () => {
         const text = newInstructionText.value.trim();
         if (!text) {
@@ -64,5 +65,12 @@ export const Default: Story = {};
 export const Empty: Story = {
   args: {
     instructions: [],
+  },
+};
+
+export const LoadFailed: Story = {
+  args: {
+    instructions: [],
+    loadFailed: true,
   },
 };
