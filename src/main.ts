@@ -15,11 +15,6 @@ app.use(PrimeVue, {
   },
 });
 
-// No `app.use(ToastService)`: it only registers `$toast` and PrimeVue's
-// inject-based `useToast`, neither of which this app uses. `<Toast />` in
-// `App.vue` subscribes to `ToastEventBus` itself, which is what
-// `@/composables/useToast` emits on.
-
 router.isReady().then(() => {
   app.mount("#app");
 });

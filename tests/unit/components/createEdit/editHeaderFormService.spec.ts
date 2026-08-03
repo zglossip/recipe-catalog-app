@@ -10,13 +10,8 @@ import { ApiResult, saveRecipe, createRecipe } from "@/services/apiService";
 import { useRouter } from "vue-router";
 import { Recipe } from "@/types/Recipe";
 
-const { showToast } = vi.hoisted(() => ({ showToast: vi.fn() }));
-
 vi.mock("@/services/apiService");
 vi.mock("vue-router");
-vi.mock("@/composables/useToast", () => ({
-  useToast: () => ({ showToast, dismissToast: vi.fn() }),
-}));
 
 const setup = (
   existingRecipe?: Recipe,
@@ -24,7 +19,6 @@ const setup = (
   service: EditHeaderFormService;
   recipeRef: Ref<Recipe | undefined>;
   routerGo: () => void;
-  showToast: Mock;
 } => {
   vi.resetAllMocks();
 
@@ -43,7 +37,7 @@ const setup = (
   const recipeRef = ref<Recipe | undefined>(existingRecipe);
   const service = useEditHeaderFormService(recipeRef);
 
-  return { service, recipeRef, routerGo, showToast };
+  return { service, recipeRef, routerGo };
 };
 
 describe("editHeaderFormService", () => {
@@ -163,39 +157,6 @@ describe("editHeaderFormService", () => {
     });
     expect(saveRecipe as Mock).not.toHaveBeenCalled();
     expect(routerGo).toHaveBeenCalledWith(-1);
-  });
-
-  it("toasts and stays put when saving an existing recipe fails", async () => {
-    const recipe = generateRecipe({ id: 7 });
-    const { service, routerGo, showToast } = setup(recipe);
-
-    (saveRecipe as Mock).mockResolvedValue({
-      ok: false,
-      error: "Save rejected",
-    } satisfies ApiResult<null>);
-
-    await service.onSaveClick();
-
-    expect(showToast).toHaveBeenCalledWith(
-      "Unable to save recipe: Save rejected",
-    );
-    expect(routerGo).not.toHaveBeenCalled();
-  });
-
-  it("toasts and stays put when creating a recipe fails", async () => {
-    const { service, routerGo, showToast } = setup(undefined);
-
-    (createRecipe as Mock).mockResolvedValue({
-      ok: false,
-      error: "Create rejected",
-    } satisfies ApiResult<Recipe>);
-
-    await service.onSaveClick();
-
-    expect(showToast).toHaveBeenCalledWith(
-      "Unable to create recipe: Create rejected",
-    );
-    expect(routerGo).not.toHaveBeenCalled();
   });
 
   it("cancels editing by navigating back", () => {

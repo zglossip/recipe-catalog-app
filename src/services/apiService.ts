@@ -3,6 +3,7 @@ import axios from "axios";
 import { BACKEND_BASE } from "@/services/constants";
 import { IngredientList } from "@/types/IngredientList";
 import { InstructionList } from "@/types/InstructionList";
+import { useToast } from "@/composables/useToast";
 
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string };
 
@@ -19,31 +20,10 @@ const mapRecipe = (recipe: Recipe & { uploaded: string | null }): Recipe => ({
   uploaded: parseUploaded(recipe.uploaded),
 });
 
-const MAX_DETAIL_LENGTH = 200;
-
-// Matches an opening or closing tag, so a bare comparison ("must be < 100")
-// still reads as a sentence.
-const MARKUP = /<\/?[a-z!]/i;
-
-/**
- * Callers concatenate `error` straight into a toast, so the backend's response
- * body is only worth relaying when it reads like a sentence. An HTML error page
- * or a stack trace comes back as a string too, and neither belongs on screen.
- */
-const isPresentableDetail = (detail: string): boolean =>
-  detail.length > 0 &&
-  detail.length <= MAX_DETAIL_LENGTH &&
-  !detail.includes("\n") &&
-  !MARKUP.test(detail);
-
 const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
-    const detail =
-      typeof error.response?.data === "string"
-        ? error.response.data.trim()
-        : undefined;
-    if (detail !== undefined && isPresentableDetail(detail)) {
-      return detail;
+    if (typeof error.response?.data === "string") {
+      return error.response.data;
     }
     return error.message || "Request failed.";
   }
@@ -55,13 +35,12 @@ const getErrorMessage = (error: unknown): string => {
   return "Request failed.";
 };
 
-// Callers own the user-facing message: they pair `result.error` with the action
-// that failed ("Unable to save ingredients: ...") or render it inline via their
-// own `displayError` flag. Toasting here too would double up.
-const handleError = <T>(error: unknown): ApiResult<T> => ({
-  ok: false,
-  error: getErrorMessage(error),
-});
+const handleError = <T>(error: unknown): ApiResult<T> => {
+  const { showToast } = useToast();
+  const message = getErrorMessage(error);
+  showToast(message);
+  return { ok: false, error: message };
+};
 
 const get = async <T>(url: string): Promise<ApiResult<T>> => {
   try {

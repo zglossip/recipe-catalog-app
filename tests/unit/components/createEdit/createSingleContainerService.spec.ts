@@ -12,26 +12,18 @@ import {
 import { generateRecipe } from "@tests/data/defaults";
 import { Recipe } from "@/types/Recipe";
 
-const { showToast } = vi.hoisted(() => ({ showToast: vi.fn() }));
-
 vi.mock("@/services/apiService");
-vi.mock("@/composables/useToast", () => ({
-  useToast: () => ({ showToast, dismissToast: vi.fn() }),
-}));
 
 interface SetupResult {
   service: CreateSingleContainerService;
-  createRecipe: Mock;
-  saveIngredients: Mock;
-  saveInstructions: Mock;
-  showToast: Mock;
+  createRecipe: () => ApiResult<Recipe>;
+  saveIngredients: () => ApiResult<null>;
+  saveInstructions: () => ApiResult<null>;
 }
 
 const setup = (
   recipe: Recipe | null = generateRecipe({ id: 55 }),
 ): SetupResult => {
-  showToast.mockReset();
-
   const createRecipeMock = vi.fn().mockResolvedValue(
     recipe
       ? ({ ok: true, data: recipe } satisfies ApiResult<Recipe>)
@@ -59,7 +51,6 @@ const setup = (
     createRecipe: createRecipeMock,
     saveIngredients: saveIngredientsMock,
     saveInstructions: saveInstructionsMock,
-    showToast,
   };
 };
 
@@ -152,8 +143,7 @@ describe("createSingleContainerService", () => {
   });
 
   it("does not save ingredients or instructions when creation fails", async () => {
-    const { service, saveIngredients, saveInstructions, showToast } =
-      setup(null);
+    const { service, saveIngredients, saveInstructions } = setup(null);
 
     service.name.value = "Fails";
     service.coursesString.value = "";
@@ -166,67 +156,5 @@ describe("createSingleContainerService", () => {
 
     expect(saveIngredients).not.toHaveBeenCalled();
     expect(saveInstructions).not.toHaveBeenCalled();
-    expect(showToast).toHaveBeenCalledWith(
-      "Unable to create recipe: Failed to create",
-    );
-  });
-
-  it("toasts when saving ingredients fails", async () => {
-    const { service, saveIngredients, showToast } = setup();
-
-    saveIngredients.mockResolvedValue({
-      ok: false,
-      error: "Ingredients rejected",
-    } satisfies ApiResult<null>);
-
-    service.name.value = "Partly Fails";
-    service.ingredientsString.value = "Flour";
-
-    await service.add();
-
-    expect(showToast).toHaveBeenCalledWith(
-      "Unable to save ingredients: Ingredients rejected",
-    );
-  });
-
-  it("toasts when saving instructions fails", async () => {
-    const { service, saveInstructions, showToast } = setup();
-
-    saveInstructions.mockResolvedValue({
-      ok: false,
-      error: "Instructions rejected",
-    } satisfies ApiResult<null>);
-
-    service.name.value = "Partly Fails";
-    service.instructionsString.value = "Bake";
-
-    await service.add();
-
-    expect(showToast).toHaveBeenCalledWith(
-      "Unable to save instructions: Instructions rejected",
-    );
-  });
-
-  it("rejects an unparseable ingredient line before creating anything", async () => {
-    const {
-      service,
-      createRecipe,
-      saveIngredients,
-      saveInstructions,
-      showToast,
-    } = setup();
-
-    service.name.value = "Bad Ingredients";
-    service.ingredientsString.value = "1|cup|Flour|sifted|extra";
-    service.instructionsString.value = "Bake";
-
-    await service.add();
-
-    expect(createRecipe).not.toHaveBeenCalled();
-    expect(saveIngredients).not.toHaveBeenCalled();
-    expect(saveInstructions).not.toHaveBeenCalled();
-    expect(showToast).toHaveBeenCalledWith(
-      'Unable to parse ingredient: "1|cup|Flour|sifted|extra"',
-    );
   });
 });

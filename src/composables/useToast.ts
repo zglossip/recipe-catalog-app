@@ -22,17 +22,11 @@ const SUMMARIES: Record<string, string> = {
 };
 
 /**
- * Raises toasts on PrimeVue's Toast queue.
- *
- * `ToastEventBus` is a module-level singleton that `<Toast />` subscribes to
- * directly, so this works outside a component — which it has to, because
- * `apiService.handleError` and the form services call it from plain functions.
- * PrimeVue's own inject-based `useToast` would require a `setup()` context.
- * `<Toast />` is mounted once in `App.vue`.
- *
- * The bus does not buffer, and `<Toast />` subscribes on `mounted`, so a toast
- * emitted synchronously during `setup()` would be dropped. Every caller today
- * raises toasts after an `await`, which is well past that point.
+ * Raises toasts on PrimeVue's Toast queue. `ToastEventBus` is a module-level
+ * singleton that the `<Toast />` in `App.vue` subscribes to directly, so this
+ * works outside a component — which it has to, because `apiService.handleError`
+ * calls it from a plain function. PrimeVue's inject-based `useToast` would
+ * require a `setup()` context.
  */
 export const useToast = () => ({
   showToast: (message: string, color: ToastColor = "danger") =>

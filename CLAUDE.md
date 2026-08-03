@@ -60,11 +60,11 @@ Convention: `vi.mock("@/services/apiService")` and `vi.mock("vue-router")` at th
 
 ### Data flow
 
-`src/services/apiService.ts` is the only place axios is used. Every call returns a discriminated `ApiResult<T>` (`{ ok: true, data }` | `{ ok: false, error }`) rather than throwing — callers branch on `result.ok`. `apiService` shows **no** toast of its own; the caller owns the user-facing message, pairing the action that failed with `result.error` (`showToast(\`Unable to save ingredients: ${response.error}\`)`) or rendering it inline via its own `displayError` flag. Keep that contract when adding endpoints. `error` is bounded to a short single-line string, so an HTML error page or stack trace from the backend falls back to the axios message instead.
+`src/services/apiService.ts` is the only place axios is used. Every call returns a discriminated `ApiResult<T>` (`{ ok: true, data }` | `{ ok: false, error }`) rather than throwing — callers branch on `result.ok`, and errors have already been surfaced as a toast by `handleError`. Keep that contract when adding endpoints.
 
 `uploaded` arrives from the API as a string and is converted to a `Date` by `mapRecipe` on the way in; any new fetch returning a recipe must run through it.
 
-`src/composables/useToast.ts` is a thin wrapper over PrimeVue's `ToastEventBus`: `showToast` emits `add` on that module-level bus, which the single `<Toast />` in `App.vue` subscribes to. There is no local toast state. Because the bus is not `inject`-based, services can raise toasts from plain functions outside `setup()` — PrimeVue's own `useToast` cannot. `main.ts` deliberately does not register `ToastService`; `<Toast />` does not need it. Tests mock `@/composables/useToast` and assert `showToast` calls.
+`src/composables/useToast.ts` emits onto PrimeVue's module-level `ToastEventBus`, which the single `<Toast />` in `App.vue` subscribes to. That bus is a module singleton, so `showToast` works outside a `setup()` context — unlike PrimeVue's own inject-based `useToast`. Tests mock `primevue/toasteventbus` and assert the emitted payload.
 
 ### Routing
 
