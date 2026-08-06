@@ -64,7 +64,7 @@ Convention: `vi.mock("@/services/apiService")` and `vi.mock("vue-router")` at th
 
 `uploaded` arrives from the API as a string and is converted to a `Date` by `mapRecipe` on the way in; any new fetch returning a recipe must run through it.
 
-`src/composables/useToast.ts` holds a module-level `reactive` singleton — importing `useToast()` anywhere shares one toast state.
+`src/composables/useToast.ts` wraps PrimeVue's `ToastService`, which `main.ts` hands over once via `registerToastService(app.config.globalProperties.$toast)`. Going through the app instance rather than `primevue/usetoast` is deliberate: that hook is `inject()` based and only works during `setup()`, while `apiService.handleError` toasts from an axios catch block. Toasts render in the single `<Toast />` mounted in `App.vue`. Tests call `registerToastService` with a stub and assert against `add`.
 
 ### Routing
 
