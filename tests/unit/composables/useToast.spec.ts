@@ -22,7 +22,7 @@ describe("useToast", () => {
     removeAllGroups.mockReset();
   });
 
-  it("adds a toast with a default danger severity", () => {
+  it("adds a toast", () => {
     const { showToast } = setup();
 
     showToast("Something went wrong");
@@ -33,29 +33,6 @@ describe("useToast", () => {
       detail: "Something went wrong",
       life: 4000,
     });
-  });
-
-  it("maps a provided color to a PrimeVue severity", () => {
-    const { showToast } = setup();
-
-    showToast("Looks good", "success");
-
-    expect(add).toHaveBeenCalledWith({
-      severity: "success",
-      summary: "Success",
-      detail: "Looks good",
-      life: 4000,
-    });
-  });
-
-  it("falls back to error for an unknown color", () => {
-    const { showToast } = setup();
-
-    showToast("Odd color", "chartreuse");
-
-    expect(add).toHaveBeenCalledWith(
-      expect.objectContaining({ severity: "error", summary: "Error" }),
-    );
   });
 
   it("queues each call, including exact repeats", () => {

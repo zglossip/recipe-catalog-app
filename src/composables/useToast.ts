@@ -1,25 +1,6 @@
 import type { ToastServiceMethods } from "primevue/toastservice";
-import type { ToastMessageOptions } from "primevue/toast";
-
-type ToastColor = "primary" | "success" | "warning" | "danger" | string;
 
 const TOAST_LIFE_MS = 4000;
-
-const SEVERITIES: Record<string, ToastMessageOptions["severity"]> = {
-  primary: "info",
-  success: "success",
-  warning: "warn",
-  danger: "error",
-};
-
-// `ToastMessage` always renders the summary span, and the theme puts a gap
-// between it and the detail — an omitted summary shows up as blank space.
-const SUMMARIES: Record<string, string> = {
-  primary: "Info",
-  success: "Success",
-  warning: "Warning",
-  danger: "Error",
-};
 
 let toastApi: ToastServiceMethods | undefined;
 
@@ -36,10 +17,12 @@ export const registerToastService = (service: ToastServiceMethods) => {
 };
 
 export const useToast = () => ({
-  showToast: (message: string, color: ToastColor = "danger") =>
+  showToast: (message: string) =>
     toastApi?.add({
-      severity: SEVERITIES[color] ?? "error",
-      summary: SUMMARIES[color] ?? "Error",
+      severity: "error",
+      // `ToastMessage` always renders the summary span, and the theme puts a
+      // gap between it and the detail — an omitted summary is blank space.
+      summary: "Error",
       detail: message,
       life: TOAST_LIFE_MS,
     }),
