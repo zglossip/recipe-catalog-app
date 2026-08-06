@@ -5,13 +5,16 @@ import { registerToastService, useToast } from "@/composables/useToast";
 const add = vi.fn();
 const removeAllGroups = vi.fn();
 
-const setup = () => {
-  registerToastService({
+const stubService = () =>
+  ({
     add,
     remove: vi.fn(),
     removeGroup: vi.fn(),
     removeAllGroups,
-  } as ToastServiceMethods);
+  }) as ToastServiceMethods;
+
+const setup = () => {
+  registerToastService(stubService());
 
   return useToast();
 };
@@ -44,11 +47,38 @@ describe("useToast", () => {
     expect(add).toHaveBeenCalledTimes(2);
   });
 
+  it("holds a toast raised before the service is registered", async () => {
+    vi.resetModules();
+    const toast = await import("@/composables/useToast");
+
+    toast.useToast().showToast("Raised too early");
+
+    expect(add).not.toHaveBeenCalled();
+
+    toast.registerToastService(stubService());
+
+    expect(add).toHaveBeenCalledWith(
+      expect.objectContaining({ detail: "Raised too early" }),
+    );
+  });
+
   it("dismisses all toasts", () => {
     const { dismissToast } = setup();
 
     dismissToast();
 
     expect(removeAllGroups).toHaveBeenCalled();
+  });
+
+  it("drops held toasts on dismiss", async () => {
+    vi.resetModules();
+    const toast = await import("@/composables/useToast");
+    const { showToast, dismissToast } = toast.useToast();
+
+    showToast("Raised too early");
+    dismissToast();
+    toast.registerToastService(stubService());
+
+    expect(add).not.toHaveBeenCalled();
   });
 });
