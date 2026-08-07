@@ -1,6 +1,8 @@
 import { Preview, setup } from "@storybook/vue3";
 import PrimeVue from "primevue/config";
+import ToastService from "primevue/toastservice";
 import { MyPreset } from "../src/style/theme";
+import { registerToastService } from "../src/composables/useToast";
 import "../src/style/style.css";
 
 setup((app) => {
@@ -9,6 +11,11 @@ setup((app) => {
       preset: MyPreset,
     },
   });
+
+  // Same handover `main.ts` does, so `useToast` reaches a real service here
+  // instead of queueing every toast a story raises.
+  app.use(ToastService);
+  registerToastService(app.config.globalProperties.$toast);
 });
 
 const preview: Preview = {
