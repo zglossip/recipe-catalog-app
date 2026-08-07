@@ -23,16 +23,6 @@ const stubEditIngredientsFormService = (args: any) => {
       newIngredientName,
       newIngredientQuantity,
       newIngredientUom,
-      onItemReorder: (evt: CustomEvent) => {
-        const from = evt.detail.from;
-        const to = evt.detail.to;
-
-        const element = ingredients.value.splice(from, 1)[0];
-        ingredients.value.splice(to, 0, element);
-
-        action("items reordered")({ to, from });
-        evt.detail.complete();
-      },
       onAddIngredient: () => {
         const name = newIngredientName.value.trim();
         if (!name) {

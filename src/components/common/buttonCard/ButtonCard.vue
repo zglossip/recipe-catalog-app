@@ -1,27 +1,24 @@
 <script setup lang="ts">
 import {
-  IonCard,
-  IonCardHeader,
-  IonButton,
-  IonCardContent,
-  IonCardTitle,
-} from "@ionic/vue";
-import {
   useButtonCardService,
   INJECTION_KEY,
 } from "@/components/common/buttonCard/buttonCardService";
 import { inject } from "vue";
+import Card from "primevue/card";
+import Button from "primevue/button";
 
 //PROPS
 
 interface Props {
   buttonText?: string;
   headerText?: string;
+  subtitleText?: string;
 }
 
 withDefaults(defineProps<Props>(), {
   buttonText: "EDIT",
   headerText: "",
+  subtitleText: "",
 });
 
 //EMITS
@@ -36,18 +33,28 @@ const { onClick } = inject(INJECTION_KEY, useButtonCardService)(clickEmit);
 </script>
 
 <template>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title v-if="headerText">
+  <Card>
+    <template #title>
+      <slot name="header">
         <span>{{ headerText }}</span>
-      </ion-card-title>
-      <slot name="header" />
-    </ion-card-header>
-    <ion-card-content>
-      <slot />
-    </ion-card-content>
-    <ion-button @click="onClick" fill="clear">
-      {{ buttonText }}
-    </ion-button>
-  </ion-card>
+      </slot>
+    </template>
+    <template #subtitle>
+      <slot name="subtitle">
+        <span>{{ subtitleText }}</span>
+      </slot>
+    </template>
+    <template #content>
+      <div class="pt-4">
+        <slot />
+      </div>
+    </template>
+    <template #footer>
+      <div class="grid justify-items-end">
+        <Button @click="onClick" severity="primary">
+          {{ buttonText }}
+        </Button>
+      </div>
+    </template>
+  </Card>
 </template>

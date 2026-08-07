@@ -5,19 +5,12 @@ import {
   INJECTION_KEY,
   useEditHeaderFormService,
 } from "./editHeaderFormService";
-import {
-  IonCard,
-  IonCardContent,
-  IonInput,
-  IonList,
-  IonItem,
-  IonSelect,
-  IonSelectOption,
-  IonButton,
-  IonIcon,
-} from "@ionic/vue";
-import { add } from "ionicons/icons";
 import FilterChips from "@/components/common/filterChips/FilterChips.vue";
+import Card from "primevue/card";
+import InputText from "primevue/inputtext";
+import InputNumber from "primevue/inputnumber";
+import SelectButton from "primevue/selectbutton";
+import Button from "primevue/button";
 
 interface Props {
   recipe?: Recipe;
@@ -45,72 +38,72 @@ const {
 </script>
 
 <template>
-  <ion-card>
-    <ion-card-content>
-      <ion-list>
-        <ion-item>
-          <ion-input label="Name" label-placement="stacked" v-model="newName" />
-        </ion-item>
-        <ion-item>
-          <ion-input
-            label="Serving Amount"
-            label-placement="stacked"
-            v-model="newServingAmount"
-            name="servamt"
-            autocomplete="off"
-          />
-        </ion-item>
-        <ion-item>
-          <ion-input
-            label="Serving Name"
-            label-placement="stacked"
-            v-model="newServingName"
-          />
-        </ion-item>
-        <ion-item>
-          <ion-select
-            label="Property Type"
+  <Card>
+    <template #content>
+      <div class="grid grid-cols-6 gap-4">
+        <div class="flex flex-col gap-2 mb-4 col-span-6">
+          <label class="font-semibold" for="rc-name"> Name </label>
+          <InputText id="rc-name" v-model="newName" />
+        </div>
+        <div
+          class="flex flex-col gap-2 mb-4 col-span-6 md:col-span-2 2xl:col-span-1"
+        >
+          <label class="font-semibold" for="rc-serving-amount">
+            Serving Amount
+          </label>
+          <InputNumber id="rc-serving-amount" v-model="newServingAmount" />
+        </div>
+        <div
+          class="flex flex-col gap-2 mb-4 col-span-6 md:col-span-4 2xl:col-span-5"
+        >
+          <label class="font-semibold" for="rc-serving-name">
+            Serving Name
+          </label>
+          <InputText id="rc-serving-name" v-model="newServingName" />
+        </div>
+        <div
+          class="flex flex-col gap-2 mb-4 col-span-6 md:col-span-2 2xl:col-span-1"
+        >
+          <label class="font-semibold" for="rc-property-type">
+            Property Type
+          </label>
+          <SelectButton
+            id="rc-property-type"
             v-model="currentFilterType"
-            fill="solid"
-            label-placement="stacked"
-          >
-            <ion-select-option
-              v-for="filterOption in filterOptions"
-              :key="filterOption"
-              :value="filterOption"
-            >
-              {{ filterOption }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item>
-          <ion-input
-            label-placement="stacked"
+            :options="filterOptions"
+          />
+        </div>
+        <div
+          class="flex flex-col gap-2 mb-4 col-span-5 md:col-span-3 2xl:col-span-4"
+        >
+          <label class="font-semibold" for="rc-property"> Property </label>
+          <InputText
+            id="rc-property"
             v-model="filterText"
-            label="Property"
+            @keyup.enter="addChip"
           />
-          <ion-button slot="end" @click="addChip">
-            <ion-icon :icon="add" />
-          </ion-button>
-        </ion-item>
-        <ion-item>
-          <FilterChips
-            :course-types="newCourseTypes"
-            :cuisine-types="newCuisineTypes"
-            :tags="newTags"
-            @remove-chip="removeChip"
-          />
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-    <ion-button fill="clear" @click="onCancelClick">Cancel</ion-button>
-    <ion-button fill="clear" @click="onSaveClick">Confirm</ion-button>
-  </ion-card>
+        </div>
+        <div class="flex flex-col gap-2 mb-4 col-span-1 justify-end">
+          <Button icon="pi pi-plus" @click="addChip" />
+        </div>
+        <div class="flex flex-col gap-4 mb-4 col-span-6">
+          <p class="font-semibold">Current Properties</p>
+          <div class="flex gap-2 flex-wrap">
+            <FilterChips
+              :course-types="newCourseTypes"
+              :cuisine-types="newCuisineTypes"
+              :tags="newTags"
+              @remove-chip="removeChip"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+    <template #footer>
+      <div class="flex justify-end gap-4">
+        <Button label="Cancel" @click="onCancelClick" severity="secondary" />
+        <Button label="Confirm" @click="onSaveClick" />
+      </div>
+    </template>
+  </Card>
 </template>
-
-<style scoped>
-ion-select {
-  margin-right: -1rem;
-  margin-left: -1rem;
-}
-</style>

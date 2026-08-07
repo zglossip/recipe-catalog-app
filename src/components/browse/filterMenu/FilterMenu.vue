@@ -1,21 +1,16 @@
 <script setup lang="ts">
-import { inject } from "vue";
+import { inject, ref } from "vue";
 import {
   Filters,
   injectionKey,
   useFilterMenuService,
 } from "@/components/browse/filterMenu/filterMenuService";
-import {
-  IonList,
-  IonItem,
-  IonSelect,
-  IonSelectOption,
-  IonInput,
-  IonButton,
-  IonIcon,
-} from "@ionic/vue";
-import { add } from "ionicons/icons";
 import FilterChips from "@/components/common/filterChips/FilterChips.vue";
+import Button from "primevue/button";
+import Dialog from "primevue/dialog";
+import InputText from "primevue/inputtext";
+import Select from "primevue/select";
+import Divider from "primevue/divider";
 
 //PROPS
 
@@ -39,10 +34,7 @@ const emitApply = (filters: Filters) => emit("apply", filters);
 const {
   filterOptions,
   currentFilterType,
-  setCurrentFilterType,
   filterText,
-  setFilterText,
-  setNameFilter,
   addFilter,
   nameFilter,
   courseTypeFilters,
@@ -57,58 +49,64 @@ const {
   props.startingTags,
   emitApply,
 );
+
+const visible = ref(false);
 </script>
 
 <template>
-  <ion-list>
-    <ion-item>
-      <ion-input
-        label="Name"
-        clear-input
-        :model-value="nameFilter"
-        fill="solid"
-        label-placement="stacked"
-        @update:model-value="setNameFilter"
+  <Button label="Filter" @click="visible = true" />
+  <Dialog v-model:visible="visible" modal header="Filter">
+    <span class="text-surface-500 dark:text-surface-400 block mb-8"
+      >Apply filters to your search</span
+    >
+    <div class="flex items-center gap-4 mb-4">
+      <label for="rc-name" class="font-semibold w-24">Name</label>
+      <InputText
+        id="rc-name"
+        v-model="nameFilter"
+        class="flex-auto"
+        autocomplete="off"
       />
-    </ion-item>
-    <ion-item>
-      <ion-select
-        label="Filter Type"
-        placeholder="Select"
-        :model-value="currentFilterType"
-        fill="solid"
-        @update:modelValue="setCurrentFilterType"
-      >
-        <ion-select-option
-          v-for="filterOption in filterOptions"
-          :key="filterOption"
-          :value="filterOption"
-        >
-          {{ filterOption }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-input
-        :clear-input="true"
-        :model-value="filterText"
-        fill="solid"
-        @update:modelValue="setFilterText"
+    </div>
+    <Divider />
+    <div class="flex items-center gap-4 mb-4">
+      <label for="rc-filter-type" class="font-semibold w-24">Filter Type</label>
+      <Select
+        id="rc-filter-type"
+        v-model="currentFilterType"
+        :options="filterOptions"
+        class="flex-auto"
       />
-      <ion-button slot="end" @click="addFilter">
-        <ion-icon :icon="add" />
-      </ion-button>
-    </ion-item>
-    <ion-item>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+      <label for="rc-filter-text" class="font-semibold w-24">Filter Text</label>
+      <InputText
+        id="rc-filter-text"
+        v-model="filterText"
+        class="flex-auto"
+        autocomplete="off"
+      />
+      <Button icon="pi pi-plus" @click="addFilter" />
+    </div>
+    <div
+      class="mb-4"
+      v-if="
+        courseTypeFilters.length ||
+        cuisineTypeFilters.length ||
+        tagFilters.length
+      "
+    >
       <FilterChips
         :course-types="courseTypeFilters"
         :cuisine-types="cuisineTypeFilters"
         :tags="tagFilters"
         @remove-chip="removeChip"
       />
-    </ion-item>
-  </ion-list>
-  <ion-button expand="full" size="large" class="apply-button" @click="apply">
-    APPLY
-  </ion-button>
+    </div>
+    <Divider />
+    <div class="flex justify-end gap-2">
+      <Button label="Cancel" @click="visible = false" severity="secondary" />
+      <Button label="Apply" @click="apply" />
+    </div>
+  </Dialog>
 </template>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { inject, toRefs } from "vue";
+import { computed, inject, toRefs } from "vue";
 import { useRecipeService, injectionKey } from "@/services/recipeService";
-import { IonCardTitle, IonCardSubtitle } from "@ionic/vue";
 import ButtonCard from "@/components/common/buttonCard/ButtonCard.vue";
 import { Recipe } from "@/types/Recipe";
 import { useRecipeUploadedDate } from "@/composables/useDateFormat";
@@ -32,21 +31,21 @@ const {
 } = inject(injectionKey, useRecipeService)(recipe, editEmit);
 
 const formattedUploaded = useRecipeUploadedDate(recipe);
+
+const formattedSubtitle = computed(() => {
+  if (formattedUploaded.value) {
+    return `${formattedServingTag.value} | Added: ${formattedUploaded.value}`;
+  }
+  return formattedServingTag.value;
+});
 </script>
 
 <template>
-  <button-card @click="onClick">
-    <template #header>
-      <ion-card-title>
-        <span>{{ recipe?.name }}</span>
-      </ion-card-title>
-      <ion-card-subtitle
-        >{{ formattedServingTag
-        }}<span v-if="formattedUploaded">
-          | Added: {{ formattedUploaded }}</span
-        ></ion-card-subtitle
-      >
-    </template>
+  <button-card
+    @click="onClick"
+    :header-text="recipe?.name"
+    :subtitle-text="formattedSubtitle"
+  >
     <div
       v-for="(tag, i) in [
         formattedCuisineTag,

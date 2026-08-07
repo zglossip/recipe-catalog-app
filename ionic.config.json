@@ -1,8 +1,0 @@
-{
-  "name": "Recipe Catalog",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue-vite",
-  "id": "d64b154f"
-}

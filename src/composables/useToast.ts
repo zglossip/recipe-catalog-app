@@ -1,25 +1,45 @@
-import { reactive, readonly } from "vue";
+import type { ToastServiceMethods } from "primevue/toastservice";
+import type { ToastMessageOptions } from "primevue/toast";
 
-type ToastColor = "primary" | "success" | "warning" | "danger" | string;
+const TOAST_LIFE_MS = 4000;
 
-const toastState = reactive({
-  isOpen: false,
-  message: "",
-  color: "danger" as ToastColor,
-});
+let toastApi: ToastServiceMethods | undefined;
+const pending: ToastMessageOptions[] = [];
 
-const showToast = (message: string, color: ToastColor = "danger") => {
-  toastState.message = message;
-  toastState.color = color;
-  toastState.isOpen = true;
-};
-
-const dismissToast = () => {
-  toastState.isOpen = false;
+/**
+ * Hands PrimeVue's ToastService to `useToast`. Called once from `main.ts`.
+ *
+ * `primevue/usetoast` is the usual way to reach this API, but it is `inject()`
+ * based and so only works during `setup()`. `apiService.handleError` toasts
+ * from an axios catch block, long after setup has returned, so we take the same
+ * service off the app instance instead.
+ */
+export const registerToastService = (service: ToastServiceMethods) => {
+  toastApi = service;
+  pending.splice(0).forEach((message) => service.add(message));
 };
 
 export const useToast = () => ({
-  toastState: readonly(toastState),
-  showToast,
-  dismissToast,
+  showToast: (message: string) => {
+    const options: ToastMessageOptions = {
+      severity: "error",
+      // `ToastMessage` always renders the summary span, and the theme puts a
+      // gap between it and the detail — an omitted summary is blank space.
+      summary: "Error",
+      detail: message,
+      life: TOAST_LIFE_MS,
+    };
+
+    // A toast can be raised before `main.ts` registers the service. Hold it
+    // rather than dropping it; registration replays whatever queued up.
+    if (toastApi) {
+      toastApi.add(options);
+    } else {
+      pending.push(options);
+    }
+  },
+  dismissToast: () => {
+    pending.length = 0;
+    toastApi?.removeAllGroups();
+  },
 });

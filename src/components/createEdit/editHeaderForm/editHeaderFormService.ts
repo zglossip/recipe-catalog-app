@@ -20,7 +20,7 @@ export interface EditHeaderFormService {
   currentFilterType: Ref<FilterType>;
   removeChip: (data: FilterChipData) => void;
   addChip: () => void;
-  onSaveClick: () => void;
+  onSaveClick: () => Promise<void>;
   onCancelClick: () => void;
 }
 

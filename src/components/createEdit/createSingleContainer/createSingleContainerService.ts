@@ -11,6 +11,17 @@ import { ref, Ref } from "vue";
 
 export const INJECTION_KEY = Symbol();
 
+/**
+ * Splits user input into a list, discarding blank entries. `"".split(sep)`
+ * yields `[""]`, so an untouched field would otherwise submit a single empty
+ * value rather than an empty list.
+ */
+const splitList = (value: string, separator: string): string[] =>
+  value
+    .split(separator)
+    .map((entry) => entry.trim())
+    .filter((entry) => entry.length > 0);
+
 export interface CreateSingleContainerService {
   name: Ref<string>;
   coursesString: Ref<string>;
@@ -42,9 +53,9 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
   async function addRecipe(): Promise<void> {
     const recipe: Recipe = {
       name: name.value,
-      courseTypes: coursesString.value.split(",").map((s) => s.trim()),
-      cuisineTypes: cuisinesString.value.split(",").map((s) => s.trim()),
-      tags: tagsString.value.split(",").map((s) => s.trim()),
+      courseTypes: splitList(coursesString.value, ","),
+      cuisineTypes: splitList(cuisinesString.value, ","),
+      tags: splitList(tagsString.value, ","),
       servingAmount: servingAmount.value,
       servingName: servingName.value,
       uploaded: null,
@@ -66,29 +77,31 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
   async function addIngredients(recipeId: number): Promise<void> {
     const ingredientList: IngredientList = {
       recipeId,
-      ingredients: ingredientsString.value.split("\n").map((ingredientLine) => {
-        const partitionedLine = ingredientLine.split("|");
+      ingredients: splitList(ingredientsString.value, "\n").map(
+        (ingredientLine) => {
+          const partitionedLine = ingredientLine.split("|");
 
-        switch (partitionedLine.length) {
-          case 4:
-          case 3:
-            return {
-              quantity: +partitionedLine[0],
-              uom: partitionedLine[1],
-              name: partitionedLine[2],
-              notes: partitionedLine[3],
-            };
-          case 2:
-          case 1:
-            return {
-              quantity: 1,
-              name: partitionedLine[0],
-              notes: partitionedLine[1],
-            };
-          default:
-            throw new Error("Error parsing ingredient");
-        }
-      }),
+          switch (partitionedLine.length) {
+            case 4:
+            case 3:
+              return {
+                quantity: +partitionedLine[0],
+                uom: partitionedLine[1],
+                name: partitionedLine[2],
+                notes: partitionedLine[3],
+              };
+            case 2:
+            case 1:
+              return {
+                quantity: 1,
+                name: partitionedLine[0],
+                notes: partitionedLine[1],
+              };
+            default:
+              throw new Error("Error parsing ingredient");
+          }
+        },
+      ),
     };
 
     await saveIngredients(ingredientList);
@@ -97,7 +110,7 @@ export function useCreateSingleContainerService(): CreateSingleContainerService 
   async function addInstructions(recipeId: number): Promise<void> {
     const instructionList: InstructionList = {
       recipeId,
-      instructions: instructionsString.value.split("\n"),
+      instructions: splitList(instructionsString.value, "\n"),
     };
 
     await saveInstructions(instructionList);

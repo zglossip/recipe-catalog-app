@@ -2,7 +2,6 @@ import { fetchRecipe } from "@/services/apiService";
 import { ERROR_RECIPE, LOADING_RECIPE } from "@/services/constants";
 import { Recipe } from "@/types/Recipe";
 import { Ref, ref } from "vue";
-import { usePageRefresher } from "@/composables/usePageRefresher";
 
 export const INJECTION_KEY = Symbol();
 
@@ -25,8 +24,6 @@ export const useEditHeaderContainerService = (
     const recipeResponse = await fetchRecipe(id);
     recipe.value = recipeResponse.ok ? recipeResponse.data : ERROR_RECIPE;
   };
-
-  usePageRefresher(refreshData);
 
   if (id !== undefined) {
     void refreshData();

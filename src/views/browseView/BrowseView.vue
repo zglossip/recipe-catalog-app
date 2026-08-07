@@ -2,22 +2,8 @@
 import RecipeItem from "@/components/browse/recipeItem/RecipeItem.vue";
 import FilterMenu from "@/components/browse/filterMenu/FilterMenu.vue";
 import BasePage from "@/components/common/basePage/BasePage.vue";
-import BaseFabModal from "@/components/common/baseFabModal/BaseFabModal.vue";
+//import BaseFabModal from "@/components/common/baseFabModal/BaseFabModal.vue";
 import { useBrowseViewService } from "./browseViewService";
-import { addCircleOutline, filterCircleOutline, menu } from "ionicons/icons";
-import { usePageRefreshController } from "@/composables/usePageRefresher";
-import {
-  IonFab,
-  IonFabButton,
-  IonFabList,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-} from "@ionic/vue";
-import { Filters } from "@/components/browse/filterMenu/filterMenuService";
-
-const pageRefreshController = usePageRefreshController();
 
 const {
   recipes,
@@ -27,73 +13,51 @@ const {
   tags,
   applyFilters,
   displayError,
-  goToCreationWizard,
-  goToQuickAdd,
-} = useBrowseViewService(pageRefreshController);
+  // goToCreationWizard,
+  // goToQuickAdd,
+} = useBrowseViewService();
 
-const onApply = (filters: Filters) => {
-  applyFilters(filters);
-};
+// const onApply = (filters: Filters) => {
+//   applyFilters(filters);
+// };
 
-const onApplyWithClose = (filters: Filters, closeModal: () => void) => {
-  onApply(filters);
-  closeModal();
-};
+// const onApplyWithClose = (filters: Filters, closeModal: () => void) => {
+//   onApply(filters);
+//   closeModal();
+// };
 
-const goToCreationWizardWithClose = (closeModal: () => void) => {
-  closeModal();
-  goToCreationWizard();
-};
+// const goToCreationWizardWithClose = (closeModal: () => void) => {
+//   closeModal();
+//   goToCreationWizard();
+// };
 
-const goToQuickAddWithClose = (closeModal: () => void) => {
-  closeModal();
-  goToQuickAdd();
-};
+// const goToQuickAddWithClose = (closeModal: () => void) => {
+//   closeModal();
+//   goToQuickAdd();
+// };
 </script>
 
 <template>
   <BasePage title="Browse">
-    <ion-item v-if="displayError">
-      <ion-label color="danger"
-        >Unable to load recipes. Please try again.</ion-label
-      >
-    </ion-item>
-    <recipe-item v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button>
-        <ion-icon :icon="menu" />
-      </ion-fab-button>
-      <ion-fab-list side="top">
-        <base-fab-modal>
-          <template #fab>
-            <ion-icon :icon="filterCircleOutline" />
-          </template>
-          <template #default="{ close }">
-            <filter-menu
-              :starting-name="name"
-              :starting-course-types="courses"
-              :starting-cuisine-types="cuisines"
-              :starting-tags="tags"
-              @apply="(filters) => onApplyWithClose(filters, close)"
-            />
-          </template>
-        </base-fab-modal>
-        <base-fab-modal>
-          <template #fab>
-            <ion-icon :icon="addCircleOutline" />
-          </template>
-          <template #default="{ close }">
-            <ion-list>
-              <ion-item button @click="goToCreationWizardWithClose(close)">
-                <ion-label>Creation Wizard</ion-label>
-              </ion-item>
-              <ion-item button @click="goToQuickAddWithClose(close)">
-                <ion-label>Quick Add</ion-label>
-              </ion-item>
-            </ion-list>
-          </template>
-        </base-fab-modal>
-      </ion-fab-list>
-    </ion-fab>
+    <template #header>
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Browse Recipes</h1>
+        <filter-menu
+          :starting-name="name"
+          :starting-course-types="courses"
+          :starting-cuisine-types="cuisines"
+          :starting-tags="tags"
+          @apply="(filters) => applyFilters(filters)"
+        />
+      </div>
+    </template>
+    <div v-if="displayError">
+      <div class="text-red-500 dark:text-red-400">
+        <span>Unable to load recipe(s).</span>
+      </div>
+    </div>
+    <div class="grid grid-cols-4 gap-4">
+      <recipe-item v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" class="col-span-4 sm:col-span-2 xl:col-span-1"/>
+    </div>
   </BasePage>
 </template>

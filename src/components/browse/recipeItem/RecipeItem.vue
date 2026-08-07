@@ -2,16 +2,8 @@
 import { injectionKey, useRecipeService } from "@/services/recipeService";
 import { Recipe } from "@/types/Recipe";
 import { inject, toRefs } from "vue";
-import {
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonIcon,
-  IonLabel,
-  IonItem,
-} from "@ionic/vue";
-import { arrowForward } from "ionicons/icons";
 import { useRecipeUploadedDate } from "@/composables/useDateFormat";
+import Panel from "primevue/panel";
 
 //PROPS
 
@@ -36,51 +28,36 @@ const formattedUploaded = useRecipeUploadedDate(recipe);
 </script>
 
 <template>
-  <ion-item :class="$style.recipeItem" @click="navigate">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-label>
-            <span :class="$style.recipeItemTitle">
-              {{ recipe.name }}
-            </span>
-            <p>
-              {{ formattedServingTag }}
-            </p>
-
-            <p
-              v-for="(tag, i) in [
-                formattedCuisineTag,
-                formattedCourseTag,
-                formattedTagTag,
-              ]"
-              :key="i"
-            >
-              {{ tag ? tag : "" }}
-            </p>
-            <p v-if="formattedUploaded">Added: {{ formattedUploaded }}</p>
-          </ion-label>
-        </ion-col>
-        <ion-col size="auto" :class="$style.recipeItemArrow">
-          <ion-icon :icon="arrowForward" size="large" />
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-item>
+  <Panel @click="navigate" class="cursor-pointer">
+    <template #header>
+      {{ recipe.name }}
+    </template>
+    <div class="grid grid-cols-6">
+      <div class="col-span-5">
+        <p class="text-sm text-surface-500 dark:text-surface-400">
+          {{ formattedServingTag }}
+        </p>
+        <p
+          v-for="(tag, i) in [
+            formattedCuisineTag,
+            formattedCourseTag,
+            formattedTagTag,
+          ]"
+          :key="i"
+          class="text-sm text-surface-500 dark:text-surface-400"
+        >
+          {{ tag ? tag : "" }}
+        </p>
+        <p
+          v-if="formattedUploaded"
+          class="text-sm text-surface-500 dark:text-surface-400"
+        >
+          Added: {{ formattedUploaded }}
+        </p>
+      </div>
+      <div class="col-span-1 flex justify-end items-end">
+        <i class="pi pi-arrow-right" />
+      </div>
+    </div>
+  </Panel>
 </template>
-
-<style module>
-.recipeItem {
-  cursor: pointer;
-}
-
-.recipeItemTitle {
-  font-size: 1.5rem;
-}
-
-.recipeItemArrow {
-  display: flex;
-  align-items: center;
-  float: right;
-}
-</style>

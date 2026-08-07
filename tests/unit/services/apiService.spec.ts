@@ -63,7 +63,7 @@ describe("apiService", () => {
     );
 
     expect(axiosMock.get).toHaveBeenCalledWith(
-      "http://example.com/recipe?name=Test Name&course=Course 1&course=Course 2&cuisine=Cuisine 1&tag=Tag 1&",
+      "http://example.com/recipe?name=Test+Name&course=Course+1&course=Course+2&cuisine=Cuisine+1&tag=Tag+1",
     );
     expect(result).toEqual({ ok: true, data });
   });

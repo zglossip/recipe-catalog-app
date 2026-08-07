@@ -1,16 +1,13 @@
 import { FILTER_OPTIONS } from "@/services/constants";
 import { FilterChipData } from "@/types/FilterChipData";
 import { FilterType } from "@/types/FilterType";
-import { Ref, readonly, ref } from "vue";
+import { Ref, ref } from "vue";
 
 export interface FilterMenuService {
   filterOptions: FilterType[];
   currentFilterType: Ref<FilterType>;
-  setCurrentFilterType: (_currentFilterType: FilterType) => void;
   filterText: Ref<string>;
-  setFilterText: (_filterText: string) => void;
   nameFilter: Ref<string>;
-  setNameFilter: (_nameFilter: string) => void;
   courseTypeFilters: Ref<string[]>;
   cuisineTypeFilters: Ref<string[]>;
   tagFilters: Ref<string[]>;
@@ -41,13 +38,6 @@ export const useFilterMenuService = (
   const courseTypeFilters: Ref<string[]> = ref(startingCourseTypes ?? []);
   const cuisineTypeFilters: Ref<string[]> = ref(startingCuisineTypes ?? []);
   const tagFilters: Ref<string[]> = ref(startingTags ?? []);
-
-  const setCurrentFilterType = (_currentFilterType: FilterType) =>
-    (currentFilterType.value = _currentFilterType);
-  const setFilterText = (_filterText: string) =>
-    (filterText.value = _filterText);
-  const setNameFilter = (_nameFilter: string) =>
-    (nameFilter.value = _nameFilter);
 
   const addFilter = () => {
     switch (currentFilterType.value) {
@@ -105,15 +95,12 @@ export const useFilterMenuService = (
 
   return {
     filterOptions: FILTER_OPTIONS,
-    currentFilterType: readonly(currentFilterType),
-    setCurrentFilterType,
-    filterText: readonly(filterText),
-    nameFilter: readonly(nameFilter),
-    setFilterText,
-    setNameFilter,
-    courseTypeFilters: courseTypeFilters,
-    cuisineTypeFilters: cuisineTypeFilters,
-    tagFilters: tagFilters,
+    currentFilterType,
+    filterText,
+    nameFilter,
+    courseTypeFilters,
+    cuisineTypeFilters,
+    tagFilters,
     addFilter,
     removeChip,
     apply,

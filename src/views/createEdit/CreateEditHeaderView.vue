@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import EditHeaderContainer from "@/components/createEdit/editHeaderContainer/EditHeaderContainer.vue";
 import BasePage from "@/components/common/basePage/BasePage.vue";
-import { usePageRefreshController } from "@/composables/usePageRefresher";
 
 //PROPS
 interface Props {
@@ -9,8 +8,6 @@ interface Props {
 }
 
 defineProps<Props>();
-
-usePageRefreshController();
 </script>
 
 <template>

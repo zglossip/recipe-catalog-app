@@ -8,15 +8,10 @@ import {
   fetchInstructions,
   saveInstructions,
 } from "@/services/apiService";
-import { reorderIonicItems } from "@/services/util";
 import { useRouter } from "vue-router";
 
 vi.mock("@/services/apiService");
-vi.mock("@/services/util");
 vi.mock("vue-router");
-vi.mock("@/composables/usePageRefresher", () => ({
-  usePageRefresher: () => {},
-}));
 
 const defaultInstructionsResponse = {
   recipeId: 5,
@@ -35,7 +30,6 @@ const setup = (
     ok: true,
     data: null,
   } satisfies ApiResult<null>);
-  (reorderIonicItems as Mock).mockImplementation(() => {});
   (fetchInstructions as Mock).mockResolvedValue({
     ok: true,
     data: response,
@@ -58,23 +52,11 @@ describe("editInstructionsService", () => {
     expect(service.instructions.value).toEqual(["Mix", "Bake"]);
   });
 
-  it("reorders instructions using reorderIonicItems", () => {
-    const { service } = setup();
-    const fakeEvent = { detail: { from: 0, to: 1, complete: vi.fn() } } as any;
-
-    service.onItemReorder(fakeEvent);
-
-    expect(reorderIonicItems as Mock).toHaveBeenCalledWith(
-      fakeEvent,
-      service.instructions.value,
-    );
-  });
-
   it("saves instructions and navigates back", async () => {
     const { service, routerGo } = setup();
     await vi.waitFor(() => expect(service.instructions.value.length).toBe(2));
 
-    service.onSaveClick();
+    await service.onSaveClick();
 
     expect(saveInstructions as Mock).toHaveBeenCalledWith({
       recipeId: defaultInstructionsResponse.recipeId,

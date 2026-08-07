@@ -1,25 +1,20 @@
-<script lang="ts" setup>
-import {
-  IonHeader,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonRefresher,
-  IonRefresherContent,
-  IonPage,
-  IonMenuButton,
-} from "@ionic/vue";
-import { home } from "ionicons/icons";
-import { inject } from "vue";
-import {
-  PAGE_REFRESH_KEY,
-  PageRefreshController,
-} from "@/composables/usePageRefresher";
+<template>
+  <div class="p-8 lg:px-64 md:px-32 sm:px-16">
+    <Menubar :model="items" class="mb-4"/>
+    <div class="mb-4">
+<slot name="header" />
+    </div>
+    <div>
+      <slot name="content" />
+      <slot />
+    </div>
+  </div>
+</template>
 
-//PROPS
+<script lang="ts" setup>
+import Menubar from "primevue/menubar";
+import { INJECTION_KEY, useBasePageService } from "./basePageService";
+import { inject } from "vue";
 
 interface Props {
   title: string;
@@ -27,43 +22,13 @@ interface Props {
 
 defineProps<Props>();
 
-const pageRefresh = inject<PageRefreshController | null>(
-  PAGE_REFRESH_KEY,
-  null,
-);
+const { navigateHome } = inject(INJECTION_KEY, useBasePageService)();
 
-const handleRefresh = async (event: CustomEvent) => {
-  if (!pageRefresh) {
-    event.detail.complete();
-    return;
-  }
-
-  await pageRefresh.onRefresh(event);
-};
+const items = [
+  {
+    label: "Home",
+    icon: "pi pi-home",
+    command: navigateHome,
+  },
+];
 </script>
-
-<template>
-  <ion-page content-id="main-content">
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-button router-link="/">
-            <ion-icon slot="icon-only" :icon="home" />
-          </ion-button>
-        </ion-buttons>
-        <ion-title>
-          {{ title }}
-        </ion-title>
-        <ion-buttons slot="end">
-          <ion-menu-button />
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
-        <ion-refresher-content />
-      </ion-refresher>
-      <slot />
-    </ion-content>
-  </ion-page>
-</template>

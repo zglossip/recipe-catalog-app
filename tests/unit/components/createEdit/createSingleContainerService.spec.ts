@@ -66,7 +66,7 @@ describe("createSingleContainerService", () => {
     service.servingAmount.value = 4;
     service.servingName.value = "plates";
     service.sourceUrl.value = "https://example.com";
-    service.ingredientsString.value = "2,cups,Rice,washed\nSugar,Sweet";
+    service.ingredientsString.value = "2|cups|Rice|washed\nSugar|Sweet";
     service.instructionsString.value = "Mix thoroughly\nServe warm";
 
     await service.add();
@@ -93,6 +93,52 @@ describe("createSingleContainerService", () => {
     expect(saveInstructions).toHaveBeenCalledWith({
       recipeId: 55,
       instructions: ["Mix thoroughly", "Serve warm"],
+    });
+  });
+
+  it("submits empty lists when the list fields are left blank", async () => {
+    const { service, createRecipe, saveIngredients, saveInstructions } =
+      setup();
+
+    service.name.value = "Plain Dish";
+
+    await service.add();
+
+    expect(createRecipe).toHaveBeenCalledWith(
+      expect.objectContaining({
+        courseTypes: [],
+        cuisineTypes: [],
+        tags: [],
+      }),
+    );
+
+    expect(saveIngredients).toHaveBeenCalledWith({
+      recipeId: 55,
+      ingredients: [],
+    });
+
+    expect(saveInstructions).toHaveBeenCalledWith({
+      recipeId: 55,
+      instructions: [],
+    });
+  });
+
+  it("ignores blank and whitespace-only entries in list fields", async () => {
+    const { service, createRecipe, saveInstructions } = setup();
+
+    service.name.value = "Padded Dish";
+    service.coursesString.value = "Lunch, , Dinner,";
+    service.instructionsString.value = "Mix\n\n   \nServe";
+
+    await service.add();
+
+    expect(createRecipe).toHaveBeenCalledWith(
+      expect.objectContaining({ courseTypes: ["Lunch", "Dinner"] }),
+    );
+
+    expect(saveInstructions).toHaveBeenCalledWith({
+      recipeId: 55,
+      instructions: ["Mix", "Serve"],
     });
   });
 
