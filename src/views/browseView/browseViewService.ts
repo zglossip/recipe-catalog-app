@@ -107,7 +107,7 @@ export const useBrowseViewService = (): BrowseViewService => {
     router.push("/recipe/create/single");
   };
 
-  refreshData()
+  refreshData();
 
   return {
     recipes,

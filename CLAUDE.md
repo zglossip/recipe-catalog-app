@@ -6,16 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Requires Node 21. Install with `npm ci`.
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Dev server on `http://localhost:8081` (`dev:container` binds `0.0.0.0`) |
-| `npm run build` | `vue-tsc` typecheck, then `vite build` — typecheck only runs here, not in `dev` |
-| `npm run test:unit` | Vitest in watch mode |
-| `npm run lint` | ESLint with `--fix` |
-| `npm run format` | Prettier write (no config file — defaults) |
-| `npm run storybook` | Storybook on `http://localhost:6006` |
-| `npm run mock:api` | json-server on port 3001 from `db.json` + `routes.json` |
-| `npm run chromatic` | Publish Storybook to Chromatic |
+| Command             | Purpose                                                                         |
+| ------------------- | ------------------------------------------------------------------------------- |
+| `npm run dev`       | Dev server on `http://localhost:8081` (`dev:container` binds `0.0.0.0`)         |
+| `npm run build`     | `vue-tsc` typecheck, then `vite build` — typecheck only runs here, not in `dev` |
+| `npm run test:unit` | Vitest in watch mode                                                            |
+| `npm run lint`      | ESLint with `--fix`                                                             |
+| `npm run format`    | Prettier write (no config file — defaults)                                      |
+| `npm run storybook` | Storybook on `http://localhost:6006`                                            |
+| `npm run mock:api`  | json-server on port 3001 from `db.json` + `routes.json`                         |
+| `npm run chromatic` | Publish Storybook to Chromatic                                                  |
 
 Single test file / single test:
 
@@ -45,7 +45,10 @@ Nearly every component folder holds three files, e.g. `viewRecipeContainer/`:
 The service exports a `Symbol()` named `INJECTION_KEY`, a `XService` interface, and a `useXService()` factory returning that interface. The component consumes it through an inject-with-default seam:
 
 ```ts
-const { recipe, onEditHeader } = inject(INJECTION_KEY, useViewRecipeContainerService)(props.id);
+const { recipe, onEditHeader } = inject(
+  INJECTION_KEY,
+  useViewRecipeContainerService,
+)(props.id);
 ```
 
 At runtime nothing provides the key, so the real service is used. Stories `provide()` a stub implementation instead, which is how components are rendered in isolation without a backend. Stub factories are **exported from the stories file** (`stubRecipeService`, `stubIngredientCardService`, …) so a parent's story can compose its children's stubs — see `ViewRecipeContainer.stories.ts`.

@@ -1,8 +1,8 @@
 <template>
   <div class="p-8 lg:px-64 md:px-32 sm:px-16">
-    <Menubar :model="items" class="mb-4"/>
+    <Menubar :model="items" class="mb-4" />
     <div class="mb-4">
-<slot name="header" />
+      <slot name="header" />
     </div>
     <div>
       <slot name="content" />

@@ -57,7 +57,12 @@ const {
       </div>
     </div>
     <div class="grid grid-cols-4 gap-4">
-      <recipe-item v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" class="col-span-4 sm:col-span-2 xl:col-span-1"/>
+      <recipe-item
+        v-for="recipe in recipes"
+        :key="recipe.id"
+        :recipe="recipe"
+        class="col-span-4 sm:col-span-2 xl:col-span-1"
+      />
     </div>
   </BasePage>
 </template>
