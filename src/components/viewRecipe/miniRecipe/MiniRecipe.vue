@@ -17,8 +17,15 @@ const { recipe, ingredients, instructions } = inject(
 )(props.id);
 
 function formatIngredient(ingredient: Ingredient): string {
-  if(ingredient.notes) {
-    return formatMeasurementText(ingredient) + " " + ingredient.name + " (" + ingredient.notes + ")"
+  if (ingredient.notes) {
+    return (
+      formatMeasurementText(ingredient) +
+      " " +
+      ingredient.name +
+      " (" +
+      ingredient.notes +
+      ")"
+    );
   }
 
   return formatMeasurementText(ingredient) + " " + ingredient.name;
@@ -35,13 +42,13 @@ function formatIngredient(ingredient: Ingredient): string {
         <span>{{ recipe.servingAmount + " " + recipe.servingName }}</span>
         <Divider v-if="ingredients" />
         <ul v-if="ingredients" class="list-disc list-inside">
-          <li v-for="ingredient in ingredients">
+          <li v-for="ingredient in ingredients" :key="ingredient.name">
             {{ formatIngredient(ingredient) }}
           </li>
         </ul>
         <Divider v-if="instructions" />
         <ol v-if="instructions" class="list-decimal list-inside">
-          <li v-for="instruction in instructions">{{ instruction }}</li>
+          <li v-for="instruction in instructions" :key="instruction">{{ instruction }}</li>
         </ol>
       </div>
     </template>
