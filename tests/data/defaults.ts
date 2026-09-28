@@ -9,6 +9,7 @@ const DEFAULT_RECIPE: Recipe = {
   servingAmount: 1,
   servingName: "serving",
   uploaded: new Date(),
+  subRecipes: [],
 };
 
 export const generateRecipe = (recipe: Partial<Recipe> = {}): Recipe => ({

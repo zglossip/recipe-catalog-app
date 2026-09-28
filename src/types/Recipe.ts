@@ -11,4 +11,5 @@ export type Recipe = {
   ingredients?: string;
   instructions?: string;
   uploaded: Date | null;
+  subRecipes: number[];
 };

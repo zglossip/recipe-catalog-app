@@ -7,6 +7,7 @@ import {
 import RecipeCard from "@/components/viewRecipe/recipeCard/RecipeCard.vue";
 import IngredientCard from "../ingredientCard/IngredientCard.vue";
 import InstructionCard from "../instructionCard/InstructionCard.vue";
+import MiniRecipe from "../miniRecipe/MiniRecipe.vue";
 
 // PROPS
 interface Props {
@@ -26,18 +27,22 @@ const {
 </script>
 
 <template>
-  <div v-if="displayError" class="text-red-500 dark:text-red-400">
+  <div v-if="displayError || !recipe" class="text-red-500 dark:text-red-400">
     <span>Unable to load recipe.</span>
   </div>
-  <div v-else class="flex flex-col gap-4 md:grid md:grid-cols-3 md:grid-rows-3">
-    <div class="md:col-start-1 md:row-start-1">
-      <RecipeCard :recipe="recipe" @edit="onEditHeader" />
+  <div else class="grid grid-cols-3 gap-4">
+    <div>
+      <RecipeCard class="mb-4" :recipe="recipe" @edit="onEditHeader" />
+      <IngredientCard class="mb-4" :id="id" @edit="onEditIngredients" />
     </div>
-    <div class="md:col-start-1 md:row-start-2 md:row-span-2">
-      <IngredientCard :id="id" @edit="onEditIngredients" />
-    </div>
-    <div class="md:col-start-2 md:col-span-2 md:row-start-1 md:row-span-3">
-      <InstructionCard :id="id" @edit="onEditInstructions" />
+    <div class="md:col-span-2">
+      <InstructionCard class="mb-4" :id="id" @edit="onEditInstructions" />
+      <MiniRecipe
+        v-for="subRecipeId in recipe?.subRecipes"
+        :key="subRecipeId"
+        class="mb-4"
+        :id="subRecipeId"
+      />
     </div>
   </div>
 </template>

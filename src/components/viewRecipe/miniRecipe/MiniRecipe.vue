@@ -48,7 +48,9 @@ function formatIngredient(ingredient: Ingredient): string {
         </ul>
         <Divider v-if="instructions" />
         <ol v-if="instructions" class="list-decimal list-inside">
-          <li v-for="instruction in instructions" :key="instruction">{{ instruction }}</li>
+          <li v-for="instruction in instructions" :key="instruction">
+            {{ instruction }}
+          </li>
         </ol>
       </div>
     </template>

@@ -10,6 +10,10 @@ import { Meta, StoryObj } from "@storybook/vue3";
 import ViewRecipeContainer from "./ViewRecipeContainer.vue";
 import { generateRecipe, generateIngredient } from "@tests/data/defaults";
 import BasePage from "@/components/common/basePage/BasePage.vue";
+import {
+  INJECTION_KEY as miniRecipeInjectionKey,
+  MiniRecipeService,
+} from "../miniRecipe/miniRecipeService.ts";
 
 // STUBS
 const stubViewRecipeContainerService = (args: any) => {
@@ -23,6 +27,18 @@ const stubViewRecipeContainerService = (args: any) => {
       onEditIngredients: () => null,
       onEditInstructions: () => null,
       refreshData: async () => undefined,
+    }),
+  );
+};
+
+const stubMiniRecipeService = (args: any) => {
+  provide(
+    miniRecipeInjectionKey,
+    (): MiniRecipeService => ({
+      recipe: ref(args.subRecipeRecipe),
+      ingredients: ref(args.subRecipeIngredients),
+      instructions: ref(args.subRecipeInstructions),
+      isLoading: args.isLoading,
     }),
   );
 };
@@ -44,6 +60,7 @@ const meta: Meta<typeof ViewRecipeContainer> = {
     recipe: generateRecipe({
       id: 100,
       name: TEST_RECIPE_NAME,
+      subRecipes: [101],
     }),
     formattedServingTag: TEST_SERVING_TAG,
     formattedCuisineTag: TEST_CUISINE_TAG,
@@ -62,7 +79,7 @@ const meta: Meta<typeof ViewRecipeContainer> = {
         uom: "Tbs",
       }),
       generateIngredient({
-        name: "Soy sauce",
+        name: "Seasoning Sauce",
         quantity: 1,
         uom: "Tbs",
       }),
@@ -72,6 +89,25 @@ const meta: Meta<typeof ViewRecipeContainer> = {
       }),
     ],
     instructions: ["Mix it", "Cook it", "Bop it"],
+    subRecipeRecipe: generateRecipe({ id: 101, name: "Seasoning Sauce" }),
+    subRecipeIngredients: [
+      generateIngredient({
+        name: "Soy Sauce",
+        quantity: 1,
+        uom: "Tbs",
+      }),
+      generateIngredient({
+        name: "Dark Soy Sauce",
+        quantity: 1,
+        uom: "Tbs",
+      }),
+      generateIngredient({
+        name: "Oyster Sauce",
+        quantity: 1,
+        uom: "Tbs",
+      }),
+    ],
+    subRecipeInstructions: ["Mix stuff together"],
   },
   argTypes: {
     formattedCuisineTag: {
@@ -91,6 +127,7 @@ const meta: Meta<typeof ViewRecipeContainer> = {
     components: { ViewRecipeContainer, BasePage },
     setup: () => {
       stubRecipeService(args);
+      stubMiniRecipeService(args);
       stubIngredientCardService(args);
       stubInstructionCardService(args);
       stubViewRecipeContainerService(args);
@@ -108,6 +145,16 @@ export default meta;
 type Story = StoryObj<typeof ViewRecipeContainer>;
 
 export const Default: Story = {};
+
+export const NoSubRecipe: Story = {
+  args: {
+    recipe: generateRecipe({
+      id: 100,
+      name: TEST_RECIPE_NAME,
+      subRecipes: [],
+    })
+  }
+}
 
 export const Error: Story = {
   args: {
